@@ -25,13 +25,11 @@ public class PlayerController : MonoBehaviour {
     [SerializeField]
     List<GameObject> _sinks = new List<GameObject>();
     SinkController sinkScript;
-    LineRenderer lr;
     #endregion
 
     // Use this for initialization
     void Awake () {
         _timer = _sinkCD;
-        lr = GetComponent<LineRenderer>();
         if (powerMin <= 0)
             powerMin = 10f;
         throwPower = powerMin;
@@ -59,7 +57,7 @@ public class PlayerController : MonoBehaviour {
                 throwPower += powerLimit * Time.deltaTime;
             else
                 throwPower = powerLimit;
-            SinkTrajectory();
+            sinkScript.AdjustForce(throwPower);
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -68,7 +66,7 @@ public class PlayerController : MonoBehaviour {
         }
         else
         {
-            SinkTrajectory();
+            //SinkTrajectory();
         }
     }
 
@@ -77,7 +75,7 @@ public class PlayerController : MonoBehaviour {
         //SinkTrajectory();
     }
 
-    private void SinkTrajectory()
+    /*private void SinkTrajectory()
     {
         float t = 0.02f;
         RaycastHit hit;
@@ -106,7 +104,7 @@ public class PlayerController : MonoBehaviour {
         {
 
         }
-    }
+    }*/
 
     private void SpawnSink()
     {
@@ -122,7 +120,6 @@ public class PlayerController : MonoBehaviour {
         sinkScript.Throw(playerCam.forward * throwPower);
         sinkInHands = null;
         sinkScript = null;
-        lr.enabled = false;
     }
 
     #region Getters and Setters

@@ -7,16 +7,20 @@ public abstract class SinkController : MonoBehaviour {
     public Transform sinkSpawn;
     public float force;
     public float mass;
-    [SerializeField]
-    protected Rigidbody _rb;
-    protected float v;
     public float vx;
     public float vy;
     public float vz;
+    public LineRenderer lr;
+    [SerializeField]
+    protected Rigidbody _rb;
+    protected float v;
+
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
         _rb.isKinematic = true;
+        if(!lr)
+            lr = GetComponent<LineRenderer>();
     }
     private void Update()
     {
@@ -30,7 +34,7 @@ public abstract class SinkController : MonoBehaviour {
     {
         _rb.isKinematic = false;
         transform.parent = null;
-
+        lr.enabled = false;
         _rb.AddForce(force, ForceMode.Impulse);
         Destroy(this, 5.0f);
     }
