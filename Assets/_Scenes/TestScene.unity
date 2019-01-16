@@ -774,6 +774,11 @@ Prefab:
       propertyPath: m_LocalPosition.y
       value: -0.822
       objectReference: {fileID: 0}
+    - target: {fileID: 114216578413601956, guid: 125acaa5afd0235488239fa4b22a8684,
+        type: 2}
+      propertyPath: uiMask.m_Bits
+      value: 32
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114352057412810764, guid: 125acaa5afd0235488239fa4b22a8684, type: 2}
     - {fileID: 114810840661060040, guid: 125acaa5afd0235488239fa4b22a8684, type: 2}

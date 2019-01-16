@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class PlayerController : MonoBehaviour {
     #region Public Variables
     public Transform sinkSpawn;
     public Transform playerCam;
     public LayerMask trajectoryMask;
+    public bool isFacingUI;
     #endregion
 
     #region Private Variables
@@ -41,70 +41,36 @@ public class PlayerController : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+#if UNITY_EDITOR
         float hValue = Input.GetAxisRaw("Mouse X");
-        transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + hValue, transform.eulerAngles.z);
-        if(sinkInHands == null)
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + hValue, transform.eulerAngles.z);  
+#endif
+        if (!isFacingUI)
         {
-            _timer -= Time.deltaTime;
-            if (_timer < 0)
+            if (sinkInHands == null)
             {
-                SpawnSink();
-                _timer = _sinkCD;
+                _timer -= Time.deltaTime;
+                if (_timer < 0)
+                {
+                    SpawnSink();
+                    _timer = _sinkCD;
+                }
             }
-        }else if (Input.GetMouseButton(0))
-        {
-            if (throwPower <= powerLimit)
-                throwPower += powerLimit * Time.deltaTime;
-            else
-                throwPower = powerLimit;
-            sinkScript.AdjustForce(throwPower);
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            ThrowSink();
-            throwPower = powerMin;
-        }
-        else
-        {
-            //SinkTrajectory();
+            else if (Input.GetMouseButton(0))
+            {
+                if (throwPower <= powerLimit)
+                    throwPower += powerLimit * Time.deltaTime;
+                else
+                    throwPower = powerLimit;
+                sinkScript.AdjustForce(throwPower);
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                ThrowSink();
+                throwPower = powerMin;
+            }
         }
     }
-
-    private void FixedUpdate()
-    {
-        //SinkTrajectory();
-    }
-
-    /*private void SinkTrajectory()
-    {
-        float t = 0.02f;
-        RaycastHit hit;
-        lr.enabled = false;
-        Vector3 origin = sinkInHands.transform.position;
-        Vector3 nextPos = origin;
-        Vector3 currentPos = origin;
-        lr.positionCount = 1;
-        lr.SetPosition(0, currentPos);
-        while (!Physics.Linecast(currentPos, nextPos, out hit, trajectoryMask) && t < 3.0f)
-        {
-            currentPos = nextPos;
-            //nextPos = origin + playerCam.forward * (throwPower * t + (0.5f * (-9.8f) * Mathf.Pow(t, 2)));
-            float x = origin.x + sinkScript.vx;
-            float y = origin.y + (sinkScript.vy + ((Physics.gravity.y * t) / 2) * t);
-            float z = origin.z + sinkScript.vz;
-            nextPos = new Vector3(x, y, z);
-            lr.positionCount++;
-            lr.SetPosition(lr.positionCount-1, nextPos);
-            t += Time.fixedDeltaTime;
-            //Debug.Log(t);
-        }
-        lr.enabled = true;
-        //if t < 3.0f then the while loop boke because the raycast hit something
-        if(t<3.0f)
-        {
-
-        }
-    }*/
 
     private void SpawnSink()
     {
@@ -122,7 +88,7 @@ public class PlayerController : MonoBehaviour {
         sinkScript = null;
     }
 
-    #region Getters and Setters
+#region Getters and Setters
     public GameObject sinkInHands
     {
         get { return _sinkInHands; }
@@ -135,5 +101,5 @@ public class PlayerController : MonoBehaviour {
         set { _sinkCD = value;
             _timer = _sinkCD; }
     }
-    #endregion
+#endregion
 }
