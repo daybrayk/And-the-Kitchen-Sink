@@ -147,11 +147,13 @@ MonoBehaviour:
   vx: 0
   vy: 0
   vz: 0
+  trajectoryModifier: 3
   lr: {fileID: 0}
   m_enemyMask:
     serializedVersion: 2
     m_Bits: 1024
   m_rb: {fileID: 0}
+  m_v: {x: 0, y: 0, z: 0}
 --- !u!120 &120161637303756548
 LineRenderer:
   m_ObjectHideFlags: 1

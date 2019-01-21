@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour {
     void Update () {
 #if UNITY_EDITOR
         float hValue = Input.GetAxisRaw("Mouse X");
-        transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + hValue, transform.eulerAngles.z);  
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + hValue, transform.eulerAngles.z);
 #endif
         if (!isFacingUI)
         {
@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour {
                     throwPower += powerLimit * Time.deltaTime;
                 else
                     throwPower = powerLimit;
-                sinkScript.AdjustForce(throwPower);
+                sinkScript.force = throwPower;
             }
             else if (Input.GetMouseButtonUp(0))
             {
@@ -78,13 +78,15 @@ public class PlayerController : MonoBehaviour {
         sinkInHands = Instantiate(_sinks[Random.Range(0, _sinks.Capacity)], sinkSpawn);
         sinkInHands.transform.position = sinkSpawn.position;
         sinkScript = sinkInHands.GetComponent<SinkController>();
+        Debug.Assert(sinkScript, "Variable sinkScript in PlayerController is NULL!");
         sinkScript.sinkSpawn = sinkSpawn;
-        sinkScript.AdjustForce(throwPower);
+        Debug.Log(throwPower);
+        sinkScript.force = throwPower;
     }
 
     private void ThrowSink()
     {
-        sinkScript.Throw(playerCam.forward * throwPower);
+        sinkScript.Throw(throwPower);
         sinkInHands = null;
         sinkScript = null;
     }

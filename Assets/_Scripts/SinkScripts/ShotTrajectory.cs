@@ -33,9 +33,9 @@ public class ShotTrajectory : MonoBehaviour {
         {
             currentPos = nextPos;
             //nextPos = origin + playerCam.forward * (throwPower * t + (0.5f * (-9.8f) * Mathf.Pow(t, 2)));
-            float x = origin.x + sinkScript.vx * t;
-            float y = origin.y + (sinkScript.vy*t + ((Physics.gravity.y * t) / 2) * t);
-            float z = origin.z + sinkScript.vz * t;
+            float x = origin.x + sinkScript.m_v.x * t;
+            float y = origin.y + (sinkScript.m_v.y*t + ((Physics.gravity.y * t) / 2) * t);
+            float z = origin.z + sinkScript.m_v.z * t;
             nextPos = new Vector3(x, y, z);
             lr.positionCount++;
             lr.SetPosition(lr.positionCount - 1, nextPos);
@@ -43,7 +43,7 @@ public class ShotTrajectory : MonoBehaviour {
             //Debug.Log(t);
         }
         lr.enabled = true;
-        //if t < 3.0f then the while loop boke because the raycast hit something
+        //if t < 3.0f then the while loop broke because the raycast hit something
         if (t < 3.0f)
         {
 
