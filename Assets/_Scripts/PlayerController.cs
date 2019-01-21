@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour {
     public Transform sinkSpawn;
     public Transform playerCam;
     public LayerMask trajectoryMask;
+    [HideInInspector]
     public bool isFacingUI;
     #endregion
 
