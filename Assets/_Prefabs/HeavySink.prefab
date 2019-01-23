@@ -95,7 +95,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1554723913708268}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 40
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 1
@@ -128,7 +128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trajectoryMask:
     serializedVersion: 2
-    m_Bits: 3072
+    m_Bits: 2048
   lr: {fileID: 120238968915730876}
 --- !u!114 &114783411198180928
 MonoBehaviour:
@@ -149,11 +149,15 @@ MonoBehaviour:
   vz: 0
   trajectoryModifier: 3
   lr: {fileID: 0}
-  m_enemyMask:
+  enemyMask:
     serializedVersion: 2
     m_Bits: 1024
-  m_rb: {fileID: 0}
+  terrainMask:
+    serializedVersion: 2
+    m_Bits: 2048
   m_v: {x: 0, y: 0, z: 0}
+  main: {fileID: 0}
+  m_rb: {fileID: 0}
 --- !u!120 &120238968915730876
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -169,7 +173,7 @@ LineRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: ec58ab527f2b92b459e31b80c2124010, type: 2}
+  - {fileID: 2100000, guid: a8a0f98eccd4c054896f2a9e9fc58850, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

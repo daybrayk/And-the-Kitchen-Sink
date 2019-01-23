@@ -4,8 +4,6 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
     #region Public Variables
     public Transform sinkSpawn;
-    public Transform playerCam;
-    public LayerMask trajectoryMask;
     [HideInInspector]
     public bool isFacingUI;
     #endregion
@@ -75,12 +73,12 @@ public class PlayerController : MonoBehaviour {
 
     private void SpawnSink()
     {
-        sinkInHands = Instantiate(_sinks[Random.Range(0, _sinks.Capacity)], sinkSpawn);
+        //sinkInHands = Instantiate(_sinks[Random.Range(0, _sinks.Capacity)], sinkSpawn);
+        sinkInHands = Instantiate(_sinks[2], sinkSpawn);
         sinkInHands.transform.position = sinkSpawn.position;
         sinkScript = sinkInHands.GetComponent<SinkController>();
         Debug.Assert(sinkScript, "Variable sinkScript in PlayerController is NULL!");
         sinkScript.sinkSpawn = sinkSpawn;
-        Debug.Log(throwPower);
         sinkScript.force = throwPower;
     }
 
