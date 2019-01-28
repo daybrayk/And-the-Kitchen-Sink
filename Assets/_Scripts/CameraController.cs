@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class CameraController : MonoBehaviour {
     public PlayerController pc;
 
@@ -14,10 +14,10 @@ public class CameraController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        float vValue = Input.GetAxis("Mouse Y");
+        /*float vValue = Input.GetAxis("Mouse Y");
         RaycastHit hit;
         transform.eulerAngles = new Vector3(transform.eulerAngles.x - vValue, transform.eulerAngles.y, transform.eulerAngles.z);
-
+        
         if(Physics.Raycast(transform.position, transform.forward, out hit, 500f, uiMask))
         {
             pc.isFacingUI = true;
@@ -25,6 +25,6 @@ public class CameraController : MonoBehaviour {
         else
         {
             pc.isFacingUI = false;
-        }
+        }*/
 	}
 }

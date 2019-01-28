@@ -13,4 +13,9 @@ public class AIController : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    private void OnDestroy()
+    {
+        GameManager.instance.RemoveEnemy(gameObject);
+    }
 }

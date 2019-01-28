@@ -16,7 +16,6 @@ public abstract class SinkController : MonoBehaviour {
     public LayerMask terrainMask;
     public Vector3 m_v;
     public Camera main;
-
     protected Rigidbody m_rb;
     private Vector3 m_trajectory;
     protected Collider[] colliderCache;
@@ -24,6 +23,7 @@ public abstract class SinkController : MonoBehaviour {
 
     private void Awake()
     {
+        GameManager.instance.AddSink(gameObject);
         terrainMask = (~1 << 10 | ~1 << 12 | ~1 << 13);
         main = Camera.main;
         m_rb = GetComponent<Rigidbody>();
@@ -35,9 +35,15 @@ public abstract class SinkController : MonoBehaviour {
             trajectoryModifier = 3.0f;
         m_trajectory = new Vector3(transform.forward.x, 0.60f, transform.forward.z).normalized;
     }
+
+    private void Start()
+    {
+
+    }
     protected void Update()
     {
-        Ray ray = main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0f));
+
+        Ray ray = new Ray(main.transform.position, main.transform.forward);
         RaycastHit hit;
         m_trajectory = Physics.Raycast(ray, out hit, terrainMask) ? Vector3.Normalize(hit.point - sinkSpawn.position) :
                                  Vector3.Normalize(ray.GetPoint(500.0f) - sinkSpawn.position);
@@ -73,10 +79,10 @@ public abstract class SinkController : MonoBehaviour {
         Destroy(this, 5.0f);
     }
 
-    /*private void OnCollisionEnter(Collision c)
+    private void OnDestroy()
     {
-        Effect(c);
-    }*/
+        GameManager.instance.RemoveSink(gameObject);
+    }
 
     public Collider[] ColliderCache
     {

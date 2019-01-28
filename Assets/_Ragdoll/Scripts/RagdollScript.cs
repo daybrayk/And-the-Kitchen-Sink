@@ -23,12 +23,15 @@ public class RagdollScript : MonoBehaviour {
 
     public void ActivateRagdoll()
     {
+        GameManager.instance.RemoveEnemy(gameObject);
+        GameManager.instance.AddEnemy(ragdoll);
         foreach (Limb limb in myLimbs)
         {
             limb.SetRagdollPos();
         }
         ragdoll.transform.parent = null;
         ragdoll.SetActive(true);
+        Destroy(gameObject, 1.0f);
         gameObject.SetActive(false);
     }
 

@@ -40,10 +40,10 @@ public class PlayerController : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-#if UNITY_EDITOR
+/*#if UNITY_EDITOR
         float hValue = Input.GetAxisRaw("Mouse X");
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + hValue, transform.eulerAngles.z);
-#endif
+#endif*/
         if (!isFacingUI)
         {
             if (sinkInHands == null)
