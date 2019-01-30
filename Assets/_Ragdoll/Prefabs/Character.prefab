@@ -386,6 +386,8 @@ GameObject:
   - component: {fileID: 95263723231783956}
   - component: {fileID: 114991390114015328}
   - component: {fileID: 114895765928661154}
+  - component: {fileID: 114813235933411418}
+  - component: {fileID: 114373710144947482}
   m_Layer: 10
   m_Name: Character
   m_TagString: Untagged
@@ -2537,6 +2539,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ragdollObject: {fileID: 54076724474259726}
+--- !u!114 &114373710144947482
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1873584954503304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c30153dff63c224d9e2d29cffe0ef41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114402328532667672
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2621,6 +2634,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ragdollObject: {fileID: 54378526023464954}
+--- !u!114 &114813235933411418
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1873584954503304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4d2054afed9b094a909f11210c68ca8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gm: {fileID: 0}
 --- !u!114 &114823041183422412
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2718,6 +2743,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ragdoll: {fileID: 1815218335919270}
   ragdollTorso: {fileID: 54517161267070624}
+  gm: {fileID: 0}
 --- !u!114 &114994738838268414
 MonoBehaviour:
   m_ObjectHideFlags: 1

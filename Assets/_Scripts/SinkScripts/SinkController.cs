@@ -17,13 +17,14 @@ public abstract class SinkController : MonoBehaviour {
     public Vector3 m_v;
     public Camera main;
     protected Rigidbody m_rb;
-    private Vector3 m_trajectory;
     protected Collider[] colliderCache;
     protected int colliderCacheSize = 32;
+    private Vector3 m_trajectory;
+    [SerializeField]
+    protected GameManager gm;
 
     private void Awake()
     {
-        GameManager.instance.AddSink(gameObject);
         terrainMask = (~1 << 10 | ~1 << 12 | ~1 << 13);
         main = Camera.main;
         m_rb = GetComponent<Rigidbody>();
@@ -36,10 +37,6 @@ public abstract class SinkController : MonoBehaviour {
         m_trajectory = new Vector3(transform.forward.x, 0.60f, transform.forward.z).normalized;
     }
 
-    private void Start()
-    {
-
-    }
     protected void Update()
     {
 
@@ -68,7 +65,7 @@ public abstract class SinkController : MonoBehaviour {
     protected void OnDrawGizmos()
     {
         //Gizmos.DrawWireSphere(transform.position, 0.5f);
-        Gizmos.DrawWireCube(transform.position, Vector3.one * 0.8f);
+        Gizmos.DrawWireCube(transform.position + (Vector3.up * 0.25f), new Vector3(0.9f, 0.4f, 0.8f));
     }
     public void Throw(float force)
     {
@@ -76,12 +73,13 @@ public abstract class SinkController : MonoBehaviour {
         transform.parent = null;
         lr.enabled = false;
         m_rb.AddForce(force * m_trajectory, ForceMode.Impulse);
-        Destroy(this, 5.0f);
+        m_rb.AddTorque(new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5)), ForceMode.Impulse);
+        Destroy(gameObject, 5.0f);
     }
 
     private void OnDestroy()
     {
-        GameManager.instance.RemoveSink(gameObject);
+        gm.RemoveSink(gameObject);
     }
 
     public Collider[] ColliderCache
@@ -95,4 +93,9 @@ public abstract class SinkController : MonoBehaviour {
     }
 
     public abstract void Effect(Collider c, RagdollScript rs);
+
+    public void SetGM(GameManager gm)
+    {
+        this.gm = gm;
+    }
 }

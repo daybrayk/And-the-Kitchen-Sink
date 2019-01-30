@@ -3,34 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour {
-    public static  GameManager instance = null;
+    //public static  GameManager instance = null;
     public List<GameObject> enemyCollector;
     public List<GameObject> sinkCollector;
     public float score;
     public bool startGame;
     private void Awake()
     {
-        if (instance == null)
+        /*if (instance == null)
         {
             instance = this;
             DontDestroyOnLoad(this);
         }
         else
-            DestroyImmediate(this);
+            DestroyImmediate(this);*/
         enemyCollector = new List<GameObject>();
         sinkCollector = new List<GameObject>();
     }
-
-    // Use this for initialization
-    void Start () {
-        
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        if (Input.GetKeyDown(KeyCode.Space))
-            SceneManager.LoadScene("GameScene");
-	}
 
     public void AddSink(GameObject o)
     {
@@ -67,6 +56,11 @@ public class GameManager : MonoBehaviour {
         startGame = true;
     }
 
+    public void StopGame()
+    {
+        startGame = false;
+    }
+
     public void ResetGame()
     {
         Debug.Log(enemyCollector.Count);
@@ -83,7 +77,6 @@ public class GameManager : MonoBehaviour {
             Destroy(temp);
         }
         score = 0;
-        startGame = false;
     }
 
     public void QuitGame()

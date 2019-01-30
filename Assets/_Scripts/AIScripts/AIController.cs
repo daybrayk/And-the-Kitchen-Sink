@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AIController : MonoBehaviour {
-
+    private GameManager gm;
 	// Use this for initialization
 	void Start () {
 		
@@ -16,6 +16,11 @@ public class AIController : MonoBehaviour {
 
     private void OnDestroy()
     {
-        GameManager.instance.RemoveEnemy(gameObject);
+        gm.RemoveEnemy(gameObject);
+    }
+
+    public void SetGM(GameManager gm)
+    {
+        this.gm = gm;
     }
 }

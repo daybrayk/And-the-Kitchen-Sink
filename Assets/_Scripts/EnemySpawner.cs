@@ -4,20 +4,27 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour {
     public GameObject enemyPrefab;
-	// Use this for initialization
-	void Start () {
-        SpawnEnemy();
-	}
+    [SerializeField]
+    private GameManager gm;
+    private bool spawnOnce = true;
 
     // Update is called once per frame
     void Update()
     {
-
+        if(spawnOnce)
+        {
+            if(gm.startGame)
+            {
+                SpawnEnemy();
+                spawnOnce = false;
+            }
+        }
     }
 
     private void SpawnEnemy()
     {
         GameObject temp = Instantiate(enemyPrefab, transform.position, enemyPrefab.transform.rotation);
-        GameManager.instance.AddEnemy(temp);
+        temp.GetComponent<AIController>().SetGM(gm);
+        gm.AddEnemy(temp);
     }
 }

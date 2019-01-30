@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour {
     [SerializeField]
     List<GameObject> _sinks = new List<GameObject>();
     SinkController sinkScript;
+    [SerializeField]
+    private GameManager gm;
     #endregion
 
     // Use this for initialization
@@ -77,6 +79,8 @@ public class PlayerController : MonoBehaviour {
         sinkInHands = Instantiate(_sinks[2], sinkSpawn);
         sinkInHands.transform.position = sinkSpawn.position;
         sinkScript = sinkInHands.GetComponent<SinkController>();
+        sinkScript.SetGM(gm);
+        gm.AddSink(sinkInHands);
         Debug.Assert(sinkScript, "Variable sinkScript in PlayerController is NULL!");
         sinkScript.sinkSpawn = sinkSpawn;
         sinkScript.force = throwPower;

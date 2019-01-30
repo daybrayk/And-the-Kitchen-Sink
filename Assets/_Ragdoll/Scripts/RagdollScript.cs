@@ -7,24 +7,17 @@ public class RagdollScript : MonoBehaviour {
     public GameObject ragdoll;
     public Rigidbody ragdollTorso;
     private Limb[] myLimbs;
-
+    [SerializeField]
+    private GameManager gm;
 	// Use this for initialization
 	void Start () {
         myLimbs = GetComponentsInChildren<Limb>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-        /*if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ActivateRagdoll();
-        }*/
-    }
 
-    public void ActivateRagdoll()
+    public void ActivateRagdoll(GameManager gm)
     {
-        GameManager.instance.RemoveEnemy(gameObject);
-        GameManager.instance.AddEnemy(ragdoll);
+        gm.RemoveEnemy(gameObject);
+        gm.AddEnemy(ragdoll);
         foreach (Limb limb in myLimbs)
         {
             limb.SetRagdollPos();

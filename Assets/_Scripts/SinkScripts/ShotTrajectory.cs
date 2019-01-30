@@ -12,6 +12,7 @@ public class ShotTrajectory : MonoBehaviour {
             sinkScript = GetComponent<SinkController>();
         if (!lr)
             lr = GetComponent<LineRenderer>();
+        SinkTrajectory();
     }
     private void FixedUpdate()
     {

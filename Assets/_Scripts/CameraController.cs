@@ -15,16 +15,16 @@ public class CameraController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         /*float vValue = Input.GetAxis("Mouse Y");
-        RaycastHit hit;
-        transform.eulerAngles = new Vector3(transform.eulerAngles.x - vValue, transform.eulerAngles.y, transform.eulerAngles.z);
         
-        if(Physics.Raycast(transform.position, transform.forward, out hit, 500f, uiMask))
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x - vValue, transform.eulerAngles.y, transform.eulerAngles.z);*/
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 500f, uiMask))
         {
             pc.isFacingUI = true;
         }
         else
         {
             pc.isFacingUI = false;
-        }*/
+        }
 	}
 }
