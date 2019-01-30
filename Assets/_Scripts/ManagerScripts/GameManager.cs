@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour {
     public List<GameObject> enemyCollector;
     public List<GameObject> sinkCollector;
     public float score;
+    public bool startGame;
     private void Awake()
     {
         if (instance == null)
@@ -61,6 +62,11 @@ public class GameManager : MonoBehaviour {
             enemyCollector.Remove(o);
     }
 
+    public void StartGame()
+    {
+        startGame = true;
+    }
+
     public void ResetGame()
     {
         Debug.Log(enemyCollector.Count);
@@ -77,11 +83,7 @@ public class GameManager : MonoBehaviour {
             Destroy(temp);
         }
         score = 0;
-    }
-
-    public void LoadMainMenu()
-    {
-
+        startGame = false;
     }
 
     public void QuitGame()
