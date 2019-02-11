@@ -3,24 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class SinkController : MonoBehaviour {
-    [HideInInspector]
-    public Transform sinkSpawn;
-    public float force;
-    public float mass;
-    public float vx;
-    public float vy;
-    public float vz;
-    public float trajectoryModifier;
+    [HideInInspector] public Transform sinkSpawn;
+    [HideInInspector] public float force;
+    [HideInInspector] public float mass;
     public LineRenderer lr;
     public LayerMask enemyMask;
     public LayerMask terrainMask;
-    public Vector3 m_v;
-    public Camera main;
+    [HideInInspector]public Vector3 m_v;
+    private Camera main;
     protected Rigidbody m_rb;
     protected Collider[] colliderCache;
     protected int colliderCacheSize = 32;
     private Vector3 m_trajectory;
-    [SerializeField]
     protected GameManager gm;
 
     private void Awake()
@@ -32,8 +26,6 @@ public abstract class SinkController : MonoBehaviour {
         if(!lr)
             lr = GetComponent<LineRenderer>();
         mass = m_rb.mass;
-        if (trajectoryModifier <= 0)
-            trajectoryModifier = 3.0f;
         m_trajectory = new Vector3(transform.forward.x, 0.60f, transform.forward.z).normalized;
     }
 
@@ -49,7 +41,6 @@ public abstract class SinkController : MonoBehaviour {
 
     protected void FixedUpdate()
     {
-        //Collider[] colliders = Physics.OverlapBox(transform.position, (Vector3.one * 0.76f) / 2, transform.rotation, m_enemyMask);
         Physics.OverlapBoxNonAlloc(transform.position, (Vector3.one * 0.76f) / 2, ColliderCache, transform.rotation, enemyMask);
         foreach(Collider c in colliderCache)
         {
@@ -57,7 +48,7 @@ public abstract class SinkController : MonoBehaviour {
             {
                 RagdollScript rs;
                 if ((rs = c.GetComponentInParent<RagdollScript>()))
-                    Effect(c, rs);
+                    rs.ActivateRagdoll(gm);//Effect(c, rs);
             }
         }
     }
@@ -74,6 +65,7 @@ public abstract class SinkController : MonoBehaviour {
         lr.enabled = false;
         m_rb.AddForce(force * m_trajectory, ForceMode.Impulse);
         m_rb.AddTorque(new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5)), ForceMode.Impulse);
+        Effect();
         Destroy(gameObject, 5.0f);
     }
 
@@ -92,7 +84,7 @@ public abstract class SinkController : MonoBehaviour {
         }
     }
 
-    public abstract void Effect(Collider c, RagdollScript rs);
+    public abstract void Effect(/*Collider c, RagdollScript rs*/);
 
     public void SetGM(GameManager gm)
     {

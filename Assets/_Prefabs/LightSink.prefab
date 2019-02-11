@@ -68,7 +68,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1554723913708268}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.219, z: 0}
+  m_LocalPosition: {x: 9.868372, y: 17.080317, z: -1.303608}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4784268123075632}
@@ -90,7 +90,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 2bec6969ca108854580f1ed5504a8fec, type: 3}
+  - {fileID: 2100000, guid: f30161d5d09e1d14eae499d15e46a753, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -173,20 +173,14 @@ MonoBehaviour:
   sinkSpawn: {fileID: 0}
   force: 0
   mass: 0
-  vx: 0
-  vy: 0
-  vz: 0
-  trajectoryModifier: 3
   lr: {fileID: 0}
   enemyMask:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 17408
   terrainMask:
     serializedVersion: 2
     m_Bits: 2048
   m_v: {x: 0, y: 0, z: 0}
-  main: {fileID: 0}
-  gm: {fileID: 0}
 --- !u!120 &120161637303756548
 LineRenderer:
   m_ObjectHideFlags: 1

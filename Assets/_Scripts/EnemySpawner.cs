@@ -13,11 +13,11 @@ public class EnemySpawner : MonoBehaviour {
     {
         if(spawnOnce)
         {
-            if(gm.startGame)
-            {
+            //if(gm.startGame)
+            //{
                 SpawnEnemy();
                 spawnOnce = false;
-            }
+            //}
         }
     }
 

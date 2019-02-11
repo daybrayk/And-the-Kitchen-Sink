@@ -18,7 +18,7 @@ public class RagdollObject : MonoBehaviour {
         {
             foreach(Rigidbody rb in GetComponentsInChildren<Rigidbody>())
             {
-                rb.mass = 0.1f;
+                rb.mass = 5.0f;
             }
         }
 	}
