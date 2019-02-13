@@ -177,13 +177,13 @@ MonoBehaviour:
   lr: {fileID: 120593928794176710}
   enemyMask:
     serializedVersion: 2
-    m_Bits: 17408
+    m_Bits: 25600
   terrainMask:
     serializedVersion: 2
     m_Bits: 2048
   m_v: {x: 0, y: 0, z: 0}
   radius: 8
-  explosionForce: 150
+  explosionForce: 100
   explosionEffect: {fileID: 191186, guid: 079954accd64b32419ec069129c81273, type: 2}
   torsoMask:
     serializedVersion: 2

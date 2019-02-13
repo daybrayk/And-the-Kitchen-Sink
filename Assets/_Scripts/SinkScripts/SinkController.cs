@@ -49,7 +49,7 @@ public abstract class SinkController : MonoBehaviour {
             {
                 RagdollScript rs;
                 if ((rs = c.GetComponentInParent<RagdollScript>()))
-                    rs.ActivateRagdoll(gm);//Effect(c, rs);
+                    CollisionEffect(rs);  //rs.ActivateRagdoll(gm);
             }
         }
     }
@@ -66,7 +66,7 @@ public abstract class SinkController : MonoBehaviour {
         lr.enabled = false;
         m_rb.AddForce(force * m_trajectory, ForceMode.Impulse);
         m_rb.AddTorque(new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5)), ForceMode.Impulse);
-        Effect();
+        //Effect();
         Destroy(gameObject, lifeSpan);
     }
 
@@ -85,7 +85,8 @@ public abstract class SinkController : MonoBehaviour {
         }
     }
 
-    public abstract void Effect(/*Collider c, RagdollScript rs*/);
+    public abstract void CollisionEffect(/*Collider c, */RagdollScript rs);
+    public abstract void ActiveEffect();
 
     public void SetGM(GameManager gm)
     {
