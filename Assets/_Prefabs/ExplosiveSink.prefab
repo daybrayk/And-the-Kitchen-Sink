@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 33545932188274972}
   - component: {fileID: 23717262703375386}
   m_Layer: 0
-  m_Name: Sink_Mesh
+  m_Name: SinkMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68,7 +68,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1511583281648050}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.0811, y: 14.844361, z: -17.205034}
+  m_LocalPosition: {x: 13.238105, y: 12.233767, z: -7.1782446}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4102363504923982}
@@ -138,7 +138,7 @@ BoxCollider:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1511583281648050}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: dce51e44c670f5944bd1050bef1daa74, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -173,6 +173,7 @@ MonoBehaviour:
   sinkSpawn: {fileID: 0}
   force: 0
   mass: 0
+  lifeSpan: 5
   lr: {fileID: 120593928794176710}
   enemyMask:
     serializedVersion: 2

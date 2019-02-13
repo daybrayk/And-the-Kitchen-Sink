@@ -173,6 +173,7 @@ MonoBehaviour:
   sinkSpawn: {fileID: 0}
   force: 0
   mass: 0
+  lifeSpan: 5
   lr: {fileID: 0}
   enemyMask:
     serializedVersion: 2

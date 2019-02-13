@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour {
     private void SpawnSink()
     {
         //sinkInHands = Instantiate(_sinks[Random.Range(0, _sinks.Capacity)], sinkSpawn);
-        sinkInHands = Instantiate(_sinks[3], sinkSpawn);
+        sinkInHands = Instantiate(_sinks[Random.Range(0, 3)], sinkSpawn);
         sinkInHands.transform.position = sinkSpawn.position;
         sinkScript = sinkInHands.GetComponent<SinkController>();
         sinkScript.SetGM(gm);

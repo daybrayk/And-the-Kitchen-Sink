@@ -6,6 +6,7 @@ public abstract class SinkController : MonoBehaviour {
     [HideInInspector] public Transform sinkSpawn;
     [HideInInspector] public float force;
     [HideInInspector] public float mass;
+    public float lifeSpan;
     public LineRenderer lr;
     public LayerMask enemyMask;
     public LayerMask terrainMask;
@@ -66,7 +67,7 @@ public abstract class SinkController : MonoBehaviour {
         m_rb.AddForce(force * m_trajectory, ForceMode.Impulse);
         m_rb.AddTorque(new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5)), ForceMode.Impulse);
         Effect();
-        Destroy(gameObject, 5.0f);
+        Destroy(gameObject, lifeSpan);
     }
 
     private void OnDestroy()
