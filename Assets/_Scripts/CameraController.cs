@@ -19,15 +19,20 @@ public class CameraController : MonoBehaviour {
         
         transform.eulerAngles = new Vector3(transform.eulerAngles.x - vValue, transform.eulerAngles.y, transform.eulerAngles.z);*/
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, 500f, m_uiMask))
+        
+        if(Physics.Raycast(transform.position, transform.forward, out hit, 500f, m_bunkerMask))
         {
             pc.isFacingUI = true;
-        }
-        else if(Physics.Raycast(transform.position, transform.forward, out hit, 500f, m_bunkerMask))
-        {
-            pc.isFacingUI = true;
-            if (Input.GetMouseButtonDown(0))
-                hit.transform.gameObject.GetComponent<BunkerScript>().ChangeBunker();
+            if (Input.GetMouseButtonUp(0))
+            {
+                BunkerScript temp;
+                if((temp = hit.transform.gameObject.GetComponent<BunkerScript>()) != pc.currentBunker)
+                {
+                    Debug.Log("Moving to " + temp.gameObject.name);
+                    temp.ChangeBunker();
+                }
+
+            }
             
         }
         else

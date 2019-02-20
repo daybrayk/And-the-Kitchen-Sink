@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour {
     public List<GameObject> sinkCollector;
     public float score;
     public bool startGame;
+    public EnemySpawner[] eSpawner;
     private void Awake()
     {
         /*if (instance == null)
@@ -77,6 +78,12 @@ public class GameManager : MonoBehaviour {
             Destroy(temp);
         }
         score = 0;
+        /********** Temporary Spawner for Alpha Build **********/
+        foreach(EnemySpawner e in eSpawner)
+        {
+            e.SpawnEnemy();
+        }
+        /********** Temporary Spawner for Alpha Build **********/
     }
 
     public void QuitGame()

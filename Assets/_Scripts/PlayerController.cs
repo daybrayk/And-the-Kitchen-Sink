@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour {
     SinkController sinkScript;
     [SerializeField]
     private GameManager gm;
+    private BunkerScript m_currentBunker;
     #endregion
 
     // Use this for initialization
@@ -71,6 +72,9 @@ public class PlayerController : MonoBehaviour {
                 throwPower = powerMin;
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            ChangeSink();
     }
 
     private void SpawnSink()
@@ -93,6 +97,20 @@ public class PlayerController : MonoBehaviour {
         sinkScript = null;
     }
 
+    private void ChangeSink()
+    {
+        if (currentBunker.m_storedSink)  //If a sink is already stored here then swap with the sink currently in the players hands
+        {
+            sinkInHands = currentBunker.SwapSink(sinkInHands);
+            sinkScript = sinkInHands.GetComponent<SinkController>();
+        }
+        else   //If no sink is stored in this bunker then store the sink currently in the player's hands and spawn a new sink
+        {
+            currentBunker.StoreSink(sinkInHands);
+            SpawnSink();
+        }
+    }
+
 #region Getters and Setters
     public GameObject sinkInHands
     {
@@ -105,6 +123,12 @@ public class PlayerController : MonoBehaviour {
         get { return _sinkCD; }
         set { _sinkCD = value;
             _timer = _sinkCD; }
+    }
+
+    public BunkerScript currentBunker
+    {
+        get { return m_currentBunker; }
+        set { m_currentBunker = value; }
     }
 #endregion
 }

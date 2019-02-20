@@ -11,17 +11,17 @@ public class EnemySpawner : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if(spawnOnce)
+        /*if(spawnOnce)
         {
             //if(gm.startGame)
             //{
                 SpawnEnemy();
                 spawnOnce = false;
             //}
-        }
+        }*/
     }
 
-    private void SpawnEnemy()
+    public/*private*/ void SpawnEnemy()
     {
         GameObject temp = Instantiate(enemyPrefab, transform.position, enemyPrefab.transform.rotation);
         temp.GetComponent<AIController>().SetGM(gm);
