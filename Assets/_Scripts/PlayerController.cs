@@ -4,28 +4,22 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
     #region Public Variables
     public Transform sinkSpawn;
-    [HideInInspector]
-    public bool isFacingUI;
+    [HideInInspector] public bool isFacingUI;
     #endregion
 
     #region Private Variables
-    [SerializeField]
-    float powerLimit;
+    [SerializeField] float powerLimit;
 
-    [SerializeField]
-    float powerMin;
+    [SerializeField] float powerMin;
     float _timer;
     float throwPower;
 
-    [SerializeField]
-    float _sinkCD;
+    [SerializeField] float _sinkCD;
     GameObject _sinkInHands;
 
-    [SerializeField]
-    List<GameObject> _sinks = new List<GameObject>();
+    [SerializeField] List<GameObject> _sinks = new List<GameObject>();
     SinkController sinkScript;
-    [SerializeField]
-    private GameManager gm;
+    [SerializeField] private GameManager gm;
     private BunkerScript m_currentBunker;
     #endregion
 
@@ -81,6 +75,7 @@ public class PlayerController : MonoBehaviour {
     {
         //sinkInHands = Instantiate(_sinks[Random.Range(0, _sinks.Capacity)], sinkSpawn);
         sinkInHands = Instantiate(_sinks[Random.Range(0, 3)], sinkSpawn);
+        //sinkInHands = Instantiate(_sinks[4], sinkSpawn);  //tests the new Fragmentation Sink
         sinkInHands.transform.position = sinkSpawn.position;
         sinkScript = sinkInHands.GetComponent<SinkController>();
         sinkScript.SetGM(gm);

@@ -23,7 +23,7 @@ public abstract class SinkController : MonoBehaviour {
         terrainMask = (~1 << 10 | ~1 << 12 | ~1 << 13);
         main = Camera.main;
         m_rb = GetComponent<Rigidbody>();
-        m_rb.isKinematic = true;
+        //m_rb.isKinematic = true;
         if(!lr)
             lr = GetComponent<LineRenderer>();
         mass = m_rb.mass;
@@ -32,12 +32,14 @@ public abstract class SinkController : MonoBehaviour {
 
     protected void Update()
     {
-
-        Ray ray = new Ray(main.transform.position, main.transform.forward);
-        RaycastHit hit;
-        m_trajectory = Physics.Raycast(ray, out hit, terrainMask) ? Vector3.Normalize(hit.point - sinkSpawn.position) :
-                                 Vector3.Normalize(ray.GetPoint(500.0f) - sinkSpawn.position);
-        m_v = m_trajectory * force / mass;
+        if(lr)
+        {
+            Ray ray = new Ray(main.transform.position, main.transform.forward);
+            RaycastHit hit;
+            m_trajectory = Physics.Raycast(ray, out hit, terrainMask) ? Vector3.Normalize(hit.point - sinkSpawn.position) :
+                                     Vector3.Normalize(ray.GetPoint(500.0f) - sinkSpawn.position);
+            m_v = m_trajectory * force / mass;
+        }
     }
 
     protected void FixedUpdate()
@@ -63,7 +65,8 @@ public abstract class SinkController : MonoBehaviour {
     {
         m_rb.isKinematic = false;
         transform.parent = null;
-        lr.enabled = false;
+        if(lr)
+            lr.enabled = false;
         m_rb.AddForce(force * m_trajectory, ForceMode.Impulse);
         m_rb.AddTorque(new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5)), ForceMode.Impulse);
         //Effect();
@@ -91,5 +94,10 @@ public abstract class SinkController : MonoBehaviour {
     public void SetGM(GameManager gm)
     {
         this.gm = gm;
+    }
+
+    public GameManager GetGM()
+    {
+        return gm;
     }
 }

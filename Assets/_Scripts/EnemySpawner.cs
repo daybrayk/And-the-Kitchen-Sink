@@ -7,6 +7,7 @@ public class EnemySpawner : MonoBehaviour {
     [SerializeField]
     private GameManager gm;
     private bool spawnOnce = true;
+    private GameObject m_currentEnemySpawned;
 
     // Update is called once per frame
     void Update()
@@ -19,12 +20,14 @@ public class EnemySpawner : MonoBehaviour {
                 spawnOnce = false;
             //}
         }*/
+        if (!m_currentEnemySpawned)
+            SpawnEnemy();
     }
 
     public/*private*/ void SpawnEnemy()
     {
-        GameObject temp = Instantiate(enemyPrefab, transform.position, enemyPrefab.transform.rotation);
-        temp.GetComponent<AIController>().SetGM(gm);
-        gm.AddEnemy(temp);
+        m_currentEnemySpawned = Instantiate(enemyPrefab, transform.position, enemyPrefab.transform.rotation);
+        m_currentEnemySpawned.GetComponent<AIController>().SetGM(gm);
+        gm.AddEnemy(m_currentEnemySpawned);
     }
 }
