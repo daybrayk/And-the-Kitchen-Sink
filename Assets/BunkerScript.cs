@@ -35,16 +35,14 @@ public class BunkerScript : MonoBehaviour {
         m_storedSink.transform.parent = null;
         m_storedSink.transform.position = m_sinkStorage.position;
         m_storedSink.transform.rotation = m_sinkStorage.rotation;
+        m_storedSink.GetComponent<LineRenderer>().enabled = false;
     }
 
     public GameObject SwapSink(GameObject sink)
     {
         GameObject temp = m_storedSink;
-        m_storedSink = sink;
-        m_storedSink.transform.parent = null;
-        temp.transform.position = pc.sinkSpawn.position;
-        m_storedSink.transform.position = m_sinkStorage.position;
-        m_storedSink.transform.rotation = m_sinkStorage.rotation;
+        StoreSink(sink);
+
         return temp;
     }
 }

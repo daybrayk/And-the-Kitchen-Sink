@@ -22,4 +22,9 @@ public class RagdollObject : MonoBehaviour {
             }
         }
 	}
+
+    private void OnEnable()
+    {
+        Destroy(gameObject, 10.0f);
+    }
 }

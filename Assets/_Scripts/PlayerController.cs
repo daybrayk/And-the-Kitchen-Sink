@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 public class PlayerController : MonoBehaviour {
     #region Public Variables
     public Transform sinkSpawn;
@@ -12,6 +13,8 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] float m_powerMin;
     float m_timer;
     float m_throwPower;
+    float m_touchTime;
+    bool m_sinkStored;
     [SerializeField] float m_sinkCD;
     GameObject m_sinkInHands;
 
@@ -34,11 +37,8 @@ public class PlayerController : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
-/*#if UNITY_EDITOR
-        float hValue = Input.GetAxisRaw("Mouse X");
-        transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + hValue, transform.eulerAngles.z);
-#endif*/
+    void Update ()
+    {
         if (!isFacingUI)
         {
             if (sinkInHands == null)
@@ -50,7 +50,8 @@ public class PlayerController : MonoBehaviour {
                     m_timer = m_sinkCD;
                 }
             }
-            else if (Input.GetMouseButton(0))
+            #if UNITY_EDITOR
+            /*else if (Input.GetMouseButton(0))
             {
                 if (m_throwPower <= m_powerLimit)
                     m_throwPower += m_powerLimit * Time.deltaTime;
@@ -58,17 +59,48 @@ public class PlayerController : MonoBehaviour {
                     m_throwPower = m_powerLimit;
                 m_sinkScript.force = m_throwPower;
             }
-            else if (Input.GetMouseButtonUp(0))
+            else*/ if (Input.GetMouseButtonUp(0))
             {
                 ThrowSink();
                 m_throwPower = m_powerMin;
             }
+            #elif UNITY_ANDROID
+            else if((Input.touchCount > 0))
+            {
+                Touch touch = Input.GetTouch(0);
+                if(touch.phase == TouchPhase.Stationary)
+                {
+                    m_touchTime += Time.deltaTime;
+                    if (m_touchTime >= 0.5f && !m_sinkStored)
+                    {
+                        ChangeSink();
+                        m_sinkStored = true;
+                    }
+                    /*if (m_throwPower <= m_powerLimit)
+                        m_throwPower += m_powerLimit * Time.deltaTime;
+                    else
+                        m_throwPower = m_powerLimit;
+                    m_sinkScript.force = m_throwPower;*/
+                }
+                else if(touch.phase == TouchPhase.Ended)
+                {
+                    if (m_sinkStored)
+                    {
+                        m_sinkStored = false;
+                        m_touchTime = 0;
+                    }
+                    else
+                        ThrowSink();
+                    //m_throwPower = m_powerMin;
+                }
+            }
+            #endif
         }
-
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Space))
             ChangeSink();
+        #endif
     }
-
     private void SpawnSink()
     {
         sinkInHands = Instantiate(m_sinks[Random.Range(0, 3)], sinkSpawn);  //Spawn a random sink
@@ -96,6 +128,10 @@ public class PlayerController : MonoBehaviour {
         {
             sinkInHands = currentBunker.SwapSink(sinkInHands);
             m_sinkScript = sinkInHands.GetComponent<SinkController>();
+            sinkInHands.GetComponent<LineRenderer>().enabled = true;
+            sinkInHands.transform.parent = sinkSpawn;
+            sinkInHands.transform.position = sinkSpawn.position;
+            sinkInHands.transform.rotation = sinkSpawn.rotation;
         }
         else   //If no sink is stored in this bunker then store the sink currently in the player's hands and spawn a new sink
         {

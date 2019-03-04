@@ -20,7 +20,7 @@ public class EnemySpawner : MonoBehaviour {
                 spawnOnce = false;
             //}
         }*/
-        if (!m_currentEnemySpawned)
+        if (gm.startGame && !m_currentEnemySpawned)
             SpawnEnemy();
     }
 
