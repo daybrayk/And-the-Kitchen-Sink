@@ -56,6 +56,14 @@ public abstract class SinkController : MonoBehaviour {
         }
     }
 
+    public void SinkConstructor(GameManager gm, Transform sinkSpawn, float throwPower)
+    {
+        this.gm = gm;
+        gm.AddSink(gameObject); //Add sink to the GameManager sink tracker
+        this.sinkSpawn = sinkSpawn;
+        force = throwPower;
+    }
+
     protected void OnDrawGizmos()
     {
         //Gizmos.DrawWireSphere(transform.position, 0.5f);
@@ -68,8 +76,7 @@ public abstract class SinkController : MonoBehaviour {
         if(lr)
             lr.enabled = false;
         m_rb.AddForce(force * m_trajectory, ForceMode.Impulse);
-        m_rb.AddTorque(new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5)), ForceMode.Impulse);
-        //Effect();
+        m_rb.AddTorque(new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5)), ForceMode.Impulse);  //Adds a random rotation to the sink before it is thrown to simulate a realistic throw
         Destroy(gameObject, lifeSpan);
     }
 

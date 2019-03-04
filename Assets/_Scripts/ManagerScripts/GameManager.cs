@@ -3,21 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour {
-    //public static  GameManager instance = null;
-    public List<GameObject> enemyCollector;
-    public List<GameObject> sinkCollector;
+    public List<GameObject> enemyCollector; //Tacks all active enemies, if the player presses the retart button all sinks are destroyed
+    public List<GameObject> sinkCollector;  //Tracks all active sinks, if the player presses the restart button all sinks are destroyed
     public float score;
     public bool startGame;
     public EnemySpawner[] eSpawner;
     private void Awake()
     {
-        /*if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(this);
-        }
-        else
-            DestroyImmediate(this);*/
         enemyCollector = new List<GameObject>();
         sinkCollector = new List<GameObject>();
     }
