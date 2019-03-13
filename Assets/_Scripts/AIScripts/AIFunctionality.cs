@@ -6,9 +6,11 @@ public class AIFunctionality : MonoBehaviour {
     public PlayerController pc;
     [SerializeField] private float attackRange;
     private NavMeshAgent m_aiAgent;
+    private Animator m_anim;
 	// Use this for initialization
 	void Start () {
         m_aiAgent = GetComponent<NavMeshAgent>();
+        m_anim = GetComponent<Animator>();
 	}
 	
 	// Update is called once per frame
@@ -23,6 +25,7 @@ public class AIFunctionality : MonoBehaviour {
     public void MoveTo(Vector3 destination)
     {
         m_aiAgent.SetDestination(destination);
+        m_anim.SetFloat("speed", m_aiAgent.velocity.sqrMagnitude);
         m_aiAgent.isStopped = false;
     }
 

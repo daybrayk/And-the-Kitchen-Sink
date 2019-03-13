@@ -3,13 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour {
-    public List<GameObject> enemyCollector; //Tacks all active enemies, if the player presses the retart button all sinks are destroyed
-    public List<GameObject> sinkCollector;  //Tracks all active sinks, if the player presses the restart button all sinks are destroyed
-    public float score;
-    public bool startGame;
+    [Tooltip("Used to track active enemie gameobjects")] [HideInInspector] public List<GameObject> enemyCollector; //Tracks all active enemies, if the player presses the retart button all sinks are destroyed
+    [Tooltip("Used to track active sink gameobjects")] [HideInInspector] public List<GameObject> sinkCollector;  //Tracks all active sinks, if the player presses the restart button all sinks are destroyed
+    public float score
+    {
+        get{ return score; }
+
+        set
+        {
+            score = value;
+            if (score > m_highscore)
+            {
+                m_highscore = score;
+            }
+        }
+    }
+    [HideInInspector] public bool startGame;
     public EnemySpawner[] eSpawner;
+    private float m_highscore;
     private void Awake()
     {
+
         enemyCollector = new List<GameObject>();
         sinkCollector = new List<GameObject>();
     }
@@ -81,6 +95,8 @@ public class GameManager : MonoBehaviour {
     public void QuitGame()
     {
         Debug.Log("Closing Game");
+        if(score > m_highscore)
+            PlayerPrefs.SetFloat("highscore", score);
         //add persistent data code
         Application.Quit();
     }

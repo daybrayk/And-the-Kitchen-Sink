@@ -33,6 +33,7 @@ public class AIController : MonoBehaviour {
 
     private void OnDestroy()
     {
+        gm.score += 10f;
         gm.RemoveEnemy(gameObject);
     }
 

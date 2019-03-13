@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour {
     public GameObject enemyPrefab;
-    [SerializeField]
-    private GameManager gm;
+    public float activationScore;
+    public float spawnCD;
+    private float m_spawnCD;
+    [SerializeField] private GameManager gm;
     private bool spawnOnce = true;
     private GameObject m_currentEnemySpawned;
 
@@ -20,8 +22,12 @@ public class EnemySpawner : MonoBehaviour {
                 spawnOnce = false;
             //}
         }*/
-        if (gm.startGame && !m_currentEnemySpawned)
+        if(gm.startGame && gm.score > activationScore && m_spawnCD <= 0)
+        {
             SpawnEnemy();
+            m_spawnCD = spawnCD;
+        }
+        m_spawnCD -= Time.deltaTime;
     }
 
     public/*private*/ void SpawnEnemy()
