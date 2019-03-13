@@ -26,10 +26,13 @@ public class CameraController : MonoBehaviour {
             if (Input.GetMouseButtonUp(0))
             {
                 BunkerScript temp;
-                if((temp = hit.transform.gameObject.GetComponent<BunkerScript>()) != pc.currentBunker)
+                if((temp = hit.transform.gameObject.GetComponent<BunkerScript>()))
                 {
-                    Debug.Log("Moving to " + temp.gameObject.name);
-                    temp.ChangeBunker();
+                    if(temp != pc.currentBunker)
+                    {
+                        Debug.Log("Moving to " + temp.gameObject.name);
+                        temp.ChangeBunker();
+                    }
                 }
 
             }

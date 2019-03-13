@@ -8,8 +8,10 @@ public class EnemySpawner : MonoBehaviour {
     public float spawnCD;
     private float m_spawnCD;
     [SerializeField] private GameManager gm;
+    [SerializeField] private PlayerController pc;
     private bool spawnOnce = true;
     private GameObject m_currentEnemySpawned;
+    public List<GameObject> enemies;
 
     // Update is called once per frame
     void Update()
@@ -22,7 +24,7 @@ public class EnemySpawner : MonoBehaviour {
                 spawnOnce = false;
             //}
         }*/
-        if(gm.startGame && gm.score > activationScore && m_spawnCD <= 0)
+        if(gm.startGame && gm.score >= activationScore && m_spawnCD <= 0)
         {
             SpawnEnemy();
             m_spawnCD = spawnCD;

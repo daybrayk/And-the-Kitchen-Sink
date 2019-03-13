@@ -2,30 +2,46 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 public class GameManager : MonoBehaviour {
     [Tooltip("Used to track active enemie gameobjects")] [HideInInspector] public List<GameObject> enemyCollector; //Tracks all active enemies, if the player presses the retart button all sinks are destroyed
     [Tooltip("Used to track active sink gameobjects")] [HideInInspector] public List<GameObject> sinkCollector;  //Tracks all active sinks, if the player presses the restart button all sinks are destroyed
+    public Text highscoreText;
+    public Text currentscoreText;
     public float score
     {
-        get{ return score; }
+        get{ return m_score; }
 
         set
         {
-            score = value;
-            if (score > m_highscore)
+            m_score = value;
+            currentscoreText.text = "Currentscore: " + m_score;
+            if (m_score > m_highscore)
             {
-                m_highscore = score;
+                m_highscore = m_score;
+                if(highscoreText)
+                    highscoreText.text = "Highscore: " + m_highscore;
+                PlayerPrefs.SetFloat("highscore", m_highscore);
             }
         }
     }
+    public PlayerController pc;
     [HideInInspector] public bool startGame;
     public EnemySpawner[] eSpawner;
+    private float m_score;
     private float m_highscore;
     private void Awake()
     {
 
         enemyCollector = new List<GameObject>();
         sinkCollector = new List<GameObject>();
+        m_highscore = PlayerPrefs.GetFloat("highscore");
+    }
+
+    private void Start()
+    {
+        highscoreText.text = "Highscore: " + m_highscore;
+        currentscoreText.text = "Currentscore: " + m_score;
     }
 
     public void AddSink(GameObject o)
@@ -84,12 +100,7 @@ public class GameManager : MonoBehaviour {
             Destroy(temp);
         }
         score = 0;
-        /********** Temporary Spawner for Alpha Build **********/
-        foreach(EnemySpawner e in eSpawner)
-        {
-            e.SpawnEnemy();
-        }
-        /********** Temporary Spawner for Alpha Build **********/
+        pc.ResetHealth();
     }
 
     public void QuitGame()
@@ -99,5 +110,10 @@ public class GameManager : MonoBehaviour {
             PlayerPrefs.SetFloat("highscore", score);
         //add persistent data code
         Application.Quit();
+    }
+
+    public float GetHighscore()
+    {
+        return m_highscore;
     }
 }

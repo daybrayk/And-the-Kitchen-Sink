@@ -7,6 +7,7 @@ public class GameScene : MonoBehaviour {
     public Button mainMenu;
     public Button play;
     public Button highscore;
+    public Button pauseHighscore;
     public Button quit;
     public Button exitHighscore;
     public GameObject mainMenuPanel;
@@ -21,6 +22,7 @@ public class GameScene : MonoBehaviour {
         play.onClick.AddListener(delegate { StartGame(); });
         quit.onClick.AddListener(delegate { gm.QuitGame(); });
         highscore.onClick.AddListener(delegate { ShowHighscore(); });
+        pauseHighscore.onClick.AddListener(delegate { ShowHighscore(); });
         exitHighscore.onClick.AddListener(delegate { HideHighScore(); });
 	}
 

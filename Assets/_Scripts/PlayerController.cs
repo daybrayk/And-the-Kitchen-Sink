@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 public class PlayerController : MonoBehaviour {
     #region Public Variables
+    public Text healthText;
     public Transform sinkSpawn;
+    public int maxHealth;
     [HideInInspector] public bool isFacingUI;
     #endregion
 
@@ -14,6 +17,7 @@ public class PlayerController : MonoBehaviour {
     float m_timer;
     float m_throwPower;
     float m_touchTime;
+    [SerializeField] private float m_currentHealth;
     bool m_sinkStored;
     [SerializeField] float m_sinkCD;
     GameObject m_sinkInHands;
@@ -21,7 +25,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] List<GameObject> m_sinks = new List<GameObject>();
     SinkController m_sinkScript;
     [SerializeField] private GameManager gm;
-    private BunkerScript m_currentBunker;
+    [SerializeField] private BunkerScript m_currentBunker;
     #endregion
 
     // Use this for initialization
@@ -34,23 +38,26 @@ public class PlayerController : MonoBehaviour {
     private void Start()
     {
         SpawnSink();
+        m_currentHealth = maxHealth;
+        healthText.text = "Health: " + m_currentHealth;
     }
 
     // Update is called once per frame
     void Update ()
     {
-        if (!isFacingUI)
+        if (sinkInHands == null)
         {
-            if (sinkInHands == null)
+            m_timer -= Time.deltaTime;
+            if (m_timer < 0)
             {
-                m_timer -= Time.deltaTime;
-                if (m_timer < 0)
-                {
-                    SpawnSink();
-                    m_timer = m_sinkCD;
-                }
+                SpawnSink();
+                m_timer = m_sinkCD;
             }
-            #if UNITY_EDITOR
+        }
+        if (!isFacingUI && sinkInHands != null)
+        {
+            
+#if UNITY_EDITOR
             /*else if (Input.GetMouseButton(0))
             {
                 if (m_throwPower <= m_powerLimit)
@@ -59,13 +66,14 @@ public class PlayerController : MonoBehaviour {
                     m_throwPower = m_powerLimit;
                 m_sinkScript.force = m_throwPower;
             }
-            else*/ if (Input.GetMouseButtonUp(0))
+            else*/
+            if (Input.GetMouseButtonUp(0))
             {
                 ThrowSink();
                 m_throwPower = m_powerMin;
             }
             #elif UNITY_ANDROID
-            else if((Input.touchCount > 0))
+            if((Input.touchCount > 0))
             {
                 Touch touch = Input.GetTouch(0);
                 if(touch.phase == TouchPhase.Stationary)
@@ -138,6 +146,21 @@ public class PlayerController : MonoBehaviour {
             currentBunker.StoreSink(sinkInHands);
             SpawnSink();
         }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        m_currentHealth -= damage;
+        if(m_currentHealth <= 0)
+        {
+            gm.ResetGame(); 
+        }
+        healthText.text = "Health: " + m_currentHealth;
+    }
+
+    public void ResetHealth()
+    {
+        m_currentHealth = maxHealth;
     }
 
 #region Getters and Setters
