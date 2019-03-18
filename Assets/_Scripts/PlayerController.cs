@@ -7,7 +7,9 @@ public class PlayerController : MonoBehaviour {
     #region Public Variables
     public Text healthText;
     public Transform sinkSpawn;
+    public Transform sinkThrow;
     public int maxHealth;
+    public bool canThrow;
     [HideInInspector] public bool isFacingUI;
     #endregion
 
@@ -26,6 +28,7 @@ public class PlayerController : MonoBehaviour {
     SinkController m_sinkScript;
     [SerializeField] private GameManager gm;
     [SerializeField] private BunkerScript m_currentBunker;
+    private Animator m_anim;
     #endregion
 
     // Use this for initialization
@@ -34,6 +37,7 @@ public class PlayerController : MonoBehaviour {
         if (m_powerMin <= 0)
             m_powerMin = 10f;
         m_throwPower = m_powerMin;
+        m_anim = GetComponent<Animator>();
 	}
     private void Start()
     {
@@ -54,7 +58,7 @@ public class PlayerController : MonoBehaviour {
                 m_timer = m_sinkCD;
             }
         }
-        if (!isFacingUI && sinkInHands != null)
+        if (!isFacingUI && sinkInHands != null && canThrow)
         {
             
 #if UNITY_EDITOR
@@ -70,6 +74,7 @@ public class PlayerController : MonoBehaviour {
             if (Input.GetMouseButtonUp(0))
             {
                 ThrowSink();
+                //m_anim.SetTrigger("throwSink");
                 m_throwPower = m_powerMin;
             }
             #elif UNITY_ANDROID
@@ -99,6 +104,7 @@ public class PlayerController : MonoBehaviour {
                     }
                     else
                         ThrowSink();
+                        //m_anim.SetTrigger("throwSink");
                     //m_throwPower = m_powerMin;
                 }
             }
@@ -121,6 +127,7 @@ public class PlayerController : MonoBehaviour {
         }
         m_sinkScript.SinkConstructor(gm, sinkSpawn, m_throwPower);  //Call the sink constructor to setup required variables
                                                                     //Sinks require a reference to the GameManager so the sink can be tracked, rather than using GameObject.Find I pass in a reference
+        m_anim.SetTrigger("prepSink");
     }
 
     private void ThrowSink()
