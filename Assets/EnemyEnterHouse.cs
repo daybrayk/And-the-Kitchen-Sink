@@ -8,7 +8,7 @@ public class EnemyEnterHouse : MonoBehaviour {
     {
         if(other.tag == "Enemy" || other.tag == "Torso")
         {
-            gm.ResetGame();
+            gm.GameOver();
         }
     }
 }

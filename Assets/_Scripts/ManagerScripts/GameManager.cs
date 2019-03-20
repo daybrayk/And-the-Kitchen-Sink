@@ -8,6 +8,13 @@ public class GameManager : MonoBehaviour {
     [Tooltip("Used to track active sink gameobjects")] [HideInInspector] public List<GameObject> sinkCollector;  //Tracks all active sinks, if the player presses the restart button all sinks are destroyed
     public Text highscoreText;
     public Text currentscoreText;
+    public PlayerController pc;
+    public GameScene gs;
+    public MessageWindowController messageController;
+    [HideInInspector] public bool startGame;
+    public EnemySpawner[] eSpawner;
+    private float m_score;
+    private float m_highscore;
     public float score
     {
         get{ return m_score; }
@@ -25,11 +32,6 @@ public class GameManager : MonoBehaviour {
             }
         }
     }
-    public PlayerController pc;
-    [HideInInspector] public bool startGame;
-    public EnemySpawner[] eSpawner;
-    private float m_score;
-    private float m_highscore;
     private void Awake()
     {
 
@@ -86,21 +88,31 @@ public class GameManager : MonoBehaviour {
 
     public void ResetGame()
     {
-        Debug.Log(enemyCollector.Count);
-        while(enemyCollector.Count > 0)
+        for(int i = enemyCollector.Count - 1; i >= 0; i--)
         {
-            GameObject temp = enemyCollector[0];
-            enemyCollector.RemoveAt(0);
+            GameObject temp = enemyCollector[i];
+            enemyCollector.RemoveAt(i);
             Destroy(temp);
         }
-        while(sinkCollector.Count > 0)
+        for(int i = sinkCollector.Count - 1; i >= 0; i--)
         {
-            GameObject temp = sinkCollector[0];
-            sinkCollector.RemoveAt(0);
-            Destroy(temp);
+            if(sinkCollector[i] != pc.sinkInHands)
+            {
+                GameObject temp = sinkCollector[i];
+                sinkCollector.RemoveAt(i);
+                Destroy(temp);
+
+            }
         }
         score = 0;
         pc.ResetHealth();
+    }
+
+    public void GameOver()
+    {
+        messageController.OpenOnGameOver();
+        gs.MainMenu();
+
     }
 
     public void QuitGame()

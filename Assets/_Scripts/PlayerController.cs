@@ -62,58 +62,47 @@ public class PlayerController : MonoBehaviour {
         {
             
 #if UNITY_EDITOR
-            /*else if (Input.GetMouseButton(0))
-            {
-                if (m_throwPower <= m_powerLimit)
-                    m_throwPower += m_powerLimit * Time.deltaTime;
-                else
-                    m_throwPower = m_powerLimit;
-                m_sinkScript.force = m_throwPower;
-            }
-            else*/
             if (Input.GetMouseButtonUp(0))
             {
                 ThrowSink();
-                //m_anim.SetTrigger("throwSink");
                 m_throwPower = m_powerMin;
             }
-            #elif UNITY_ANDROID
+
+#elif UNITY_ANDROID
             if((Input.touchCount > 0))
             {
                 Touch touch = Input.GetTouch(0);
-                if(touch.phase == TouchPhase.Stationary)
+                if(touch.phase == TouchPhase.Ended)
                 {
-                    m_touchTime += Time.deltaTime;
-                    if (m_touchTime >= 0.5f && !m_sinkStored)
-                    {
-                        ChangeSink();
-                        m_sinkStored = true;
-                    }
-                    /*if (m_throwPower <= m_powerLimit)
-                        m_throwPower += m_powerLimit * Time.deltaTime;
-                    else
-                        m_throwPower = m_powerLimit;
-                    m_sinkScript.force = m_throwPower;*/
-                }
-                else if(touch.phase == TouchPhase.Ended)
-                {
-                    if (m_sinkStored)
+                    /*if (m_sinkStored)
                     {
                         m_sinkStored = false;
                         m_touchTime = 0;
-                    }
-                    else
+                    }*/
+                   // else
                         ThrowSink();
-                        //m_anim.SetTrigger("throwSink");
-                    //m_throwPower = m_powerMin;
+                }
+                if(touch.phase == TouchPhase.Stationary)
+                {
+                    m_touchTime += Time.deltaTime;
+                    if (m_touchTime >= 1.0f /*&& !m_sinkStored*/)
+                    {
+                        ChangeSink();
+                        m_anim.SetTrigger("prepSink");
+                        //m_sinkStored = true;
+                    }
+                }
+                else
+                {
+                    m_touchTime = 0;
                 }
             }
-            #endif
+#endif
         }
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Space))
             ChangeSink();
-        #endif
+#endif
     }
     private void SpawnSink()
     {
