@@ -4,21 +4,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class GameManager : MonoBehaviour {
-    [Tooltip("Used to track active enemie gameobjects")] [HideInInspector] public List<GameObject> enemyCollector; //Tracks all active enemies, if the player presses the retart button all sinks are destroyed
-    [Tooltip("Used to track active sink gameobjects")] [HideInInspector] public List<GameObject> sinkCollector;  //Tracks all active sinks, if the player presses the restart button all sinks are destroyed
-    public Text highscoreText;
-    public Text currentscoreText;
-    public PlayerController pc;
-    public GameScene gs;
-    public MessageWindowController messageController;
-    [HideInInspector] public bool startGame;
-    public EnemySpawner[] eSpawner;
-    private float m_score;
+    #region Game State Variables
+    [HideInInspector] public bool isGameRunning;
     private float m_highscore;
-    public float score
+    
+    private float m_score;
+    public float Score
     {
         get{ return m_score; }
-
+        
         set
         {
             m_score = value;
@@ -32,6 +26,34 @@ public class GameManager : MonoBehaviour {
             }
         }
     }
+    #endregion
+
+    #region UI References
+    [Header("UI References")]
+    [Tooltip("Reference to the Text object used to display the High Score")][SerializeField]private Text highscoreText;
+    [Tooltip("Reference to the Text object used to display the current Score")][SerializeField]private Text currentscoreText;
+    [Tooltip("Reference to the script that controlls the start of game instruction window")][SerializeField]private MessageWindowController messageController;
+    [Tooltip("Reference to script that controls the UI for the scene")][SerializeField]private GameScene gs;
+    #endregion
+
+    #region Player Controller and EnemySpawner References
+    [Header("Player Controller")]
+    [SerializeField]private PlayerController pc;
+    [Header("Enemy Spawners")]
+    public EnemySpawner[] eSpawner;
+    #endregion
+
+
+    #region Object Trackers
+    [Tooltip("Used to track active enemy Game Objects")] private List<GameObject> enemyCollector; //Tracks all active enemies, if the player presses the retart button all sinks are destroyed
+    [Tooltip("Used to track active sink Game Objects")] private List<GameObject> sinkCollector;  //Tracks all active sinks, if the player presses the restart button all sinks are destroyed
+    #endregion
+
+    #region Events
+    public delegate void GameOver();
+    public static GameOver gameOver;
+    #endregion
+
     private void Awake()
     {
 
@@ -78,12 +100,12 @@ public class GameManager : MonoBehaviour {
 
     public void StartGame()
     {
-        startGame = true;
+        isGameRunning = true;
     }
 
     public void StopGame()
     {
-        startGame = false;
+        isGameRunning = false;
     }
 
     public void ResetGame()
@@ -96,7 +118,7 @@ public class GameManager : MonoBehaviour {
         }
         for(int i = sinkCollector.Count - 1; i >= 0; i--)
         {
-            if(sinkCollector[i] != pc.sinkInHands)
+            if(sinkCollector[i] != pc.SinkInHands)
             {
                 GameObject temp = sinkCollector[i];
                 sinkCollector.RemoveAt(i);
@@ -104,22 +126,24 @@ public class GameManager : MonoBehaviour {
 
             }
         }
-        score = 0;
+        Score = 0;
         pc.ResetHealth();
     }
 
-    public void GameOver()
+    public void OnGameOver()
     {
-        messageController.OpenOnGameOver();
-        gs.MainMenu();
+        if (gameOver != null)
+            gameOver();
+        /*messageController.Open();
+        gs.MainMenu();*/
 
     }
 
     public void QuitGame()
     {
         Debug.Log("Closing Game");
-        if(score > m_highscore)
-            PlayerPrefs.SetFloat("highscore", score);
+        if(Score > m_highscore)
+            PlayerPrefs.SetFloat("highscore", Score);
         //add persistent data code
         Application.Quit();
     }

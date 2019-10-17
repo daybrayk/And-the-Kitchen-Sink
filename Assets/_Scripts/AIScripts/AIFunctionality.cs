@@ -2,46 +2,52 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-public class AIFunctionality : MonoBehaviour {
-    public PlayerController pc;
-    [SerializeField] private float attackRange;
-    private NavMeshAgent m_aiAgent;
+public class AIFunctionality : MonoBehaviour 
+{
+    private NavMeshAgent m_navAgent;
     private Animator m_anim;
-	// Use this for initialization
+
 	void Awake () {
-        m_aiAgent = GetComponent<NavMeshAgent>();
+        m_navAgent = GetComponent<NavMeshAgent>();
         m_anim = GetComponent<Animator>();
 	}
 	
-	// Update is called once per frame
 	void Update () {
 
-        if(Time.frameCount % 5 == 0)
+        if(Time.frameCount % 5 == 0)//Execute every 5 frames
         {
             
         }
 	}
 
+    public void Move()
+    {
+        m_navAgent.isStopped = false;
+        m_anim.SetFloat("speed", m_navAgent.velocity.sqrMagnitude);
+    }
+
     public void MoveTo(Vector3 destination)
     {
-        m_aiAgent.SetDestination(destination);
-        m_aiAgent.isStopped = false;
-        m_anim.SetFloat("speed", m_aiAgent.velocity.sqrMagnitude);
+        m_navAgent.SetDestination(destination);
+        m_navAgent.isStopped = false;
+        m_anim.SetFloat("speed", m_navAgent.velocity.sqrMagnitude);
+    }
+
+
+    public void Stop()
+    {
+        m_navAgent.isStopped = true;
+        m_anim.SetFloat("speed", 0);
     }
 
     public void Attack()
     {
-        m_aiAgent.isStopped = true;
+        m_navAgent.isStopped = true;
         m_anim.SetTrigger("wave");
-    }
-
-    public void EnterHouse()
-    {
-
     }
 
     public NavMeshAgent GetAgent()
     {
-        return m_aiAgent;
+        return m_navAgent;
     }
 }

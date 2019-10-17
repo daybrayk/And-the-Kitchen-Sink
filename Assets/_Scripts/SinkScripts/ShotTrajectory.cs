@@ -2,52 +2,58 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShotTrajectory : MonoBehaviour {
-    public LayerMask trajectoryMask;
-    public LineRenderer lr;
-    SinkController sinkScript;
+public class ShotTrajectory : MonoBehaviour 
+{
+    [SerializeField]private LayerMask m_trajectoryMask;
+
+    private LineRenderer m_trajectoryRenderer;
+    private SinkController m_sinkcontroller;
+
     private void Start()
     {
-        if(!sinkScript)
-            sinkScript = GetComponent<SinkController>();
-        if (!lr)
-            lr = GetComponent<LineRenderer>();
+        if(!m_sinkcontroller)
+            m_sinkcontroller = GetComponent<SinkController>();
+        if (!m_trajectoryRenderer)
+            m_trajectoryRenderer = GetComponent<LineRenderer>();
         SinkTrajectory();
     }
-    private void FixedUpdate()
+
+    private void Update()
     {
-        if (lr.enabled == true)
+        if (m_trajectoryRenderer.enabled == true)
             SinkTrajectory();
     }
 
     private void SinkTrajectory()
     {
-        float t = 0.02f;
+        float t = 0.02f; //Time step for calculating trajectory points over time
+
         RaycastHit hit;
-        lr.enabled = false;
+
         Vector3 origin = transform.position;
         Vector3 nextPos = origin;
         Vector3 currentPos = origin;
-        lr.positionCount = 1;
-        lr.SetPosition(0, currentPos);
-        while (!Physics.Linecast(currentPos, nextPos, out hit, trajectoryMask) && t < 3.0f)
+
+        m_trajectoryRenderer.enabled = false;
+        m_trajectoryRenderer.positionCount = 1;
+        m_trajectoryRenderer.SetPosition(0, currentPos);
+
+        //If the linecast never hits anything the loup exits after three seconds to avoid an infinite loop
+        while (!Physics.Linecast(currentPos, nextPos, out hit, m_trajectoryMask) && t < 3.0f)
         {
             currentPos = nextPos;
-            //nextPos = origin + playerCam.forward * (throwPower * t + (0.5f * (-9.8f) * Mathf.Pow(t, 2)));
-            float x = origin.x + sinkScript.m_v.x * t;
-            float y = origin.y + (sinkScript.m_v.y*t + ((Physics.gravity.y * t) / 2) * t);
-            float z = origin.z + sinkScript.m_v.z * t;
-            nextPos = new Vector3(x, y, z);
-            lr.positionCount++;
-            lr.SetPosition(lr.positionCount - 1, nextPos);
-            t += Time.fixedDeltaTime;
-            //Debug.Log(t);
-        }
-        lr.enabled = true;
-        //if t < 3.0f then the while loop broke because the raycast hit something
-        if (t < 3.0f)
-        {
 
+            float x = origin.x + m_sinkcontroller.m_v.x * t;
+            float y = origin.y + (m_sinkcontroller.m_v.y*t + ((Physics.gravity.y * t) / 2) * t);
+            float z = origin.z + m_sinkcontroller.m_v.z * t;
+            nextPos = new Vector3(x, y, z);
+
+            m_trajectoryRenderer.positionCount++;
+            m_trajectoryRenderer.SetPosition(m_trajectoryRenderer.positionCount - 1, nextPos);
+
+            t += Time.fixedDeltaTime;
         }
+
+        m_trajectoryRenderer.enabled = true;
     }
 }

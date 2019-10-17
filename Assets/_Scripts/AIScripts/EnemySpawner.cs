@@ -24,7 +24,7 @@ public class EnemySpawner : MonoBehaviour {
                 spawnOnce = false;
             //}
         }*/
-        if(gm.startGame && gm.score >= activationScore && m_spawnCD <= 0)
+        if(gm.isGameRunning && gm.Score >= activationScore && m_spawnCD <= 0)
         {
             SpawnEnemy();
             m_spawnCD = spawnCD;

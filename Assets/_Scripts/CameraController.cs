@@ -28,7 +28,7 @@ public class CameraController : MonoBehaviour {
                 BunkerScript temp;
                 if((temp = hit.transform.gameObject.GetComponent<BunkerScript>()))
                 {
-                    if(temp != pc.currentBunker)
+                    if(temp != pc.CurrentBunker)
                     {
                         Debug.Log("Moving to " + temp.gameObject.name);
                         temp.ChangeBunker();

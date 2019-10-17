@@ -6,41 +6,42 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour {
     #region Public Variables
     public Text healthText;
-    public Transform sinkSpawn;
-    public Transform sinkThrow;
-    public int maxHealth;
-    public bool canThrow;
+    #endregion
+
+    #region Throw Booleans
+    [HideInInspector] public bool isAbleToThrow;
     [HideInInspector] public bool isFacingUI;
+    private float m_currentHealth;
+    [SerializeField] private int maxHealth;
+    [SerializeField] private float m_throwPower;
+    [SerializeField] private float m_sinkCD;
     #endregion
 
     #region Private Variables
-    [SerializeField] float m_powerLimit;
-    [SerializeField] float m_powerMin;
-    float m_timer;
-    float m_throwPower;
-    float m_touchTime;
-    [SerializeField] private float m_currentHealth;
-    bool m_sinkStored;
-    [SerializeField] float m_sinkCD;
-    GameObject m_sinkInHands;
-
-    [SerializeField] List<GameObject> m_sinks = new List<GameObject>();
-    SinkController m_sinkScript;
-    [SerializeField] private GameManager gm;
+    [SerializeField] private Transform m_sinkSpawnPosition;
+    [SerializeField] private Transform m_sinkThrowPosition;
+    [SerializeField] private List<GameObject> m_sinks = new List<GameObject>();//List of active sinks in the scene so they can be tracked and destroyed
+    private GameManager m_gameManager;
     [SerializeField] private BunkerScript m_currentBunker;
+
+    float m_timer;
+    float m_touchTime;
+    private GameObject m_sinkInHands;
+    private SinkController m_currentSinkController;
     private Animator m_anim;
     #endregion
 
     // Use this for initialization
     void Awake () {
-        m_timer = m_sinkCD;
-        if (m_powerMin <= 0)
-            m_powerMin = 10f;
-        m_throwPower = m_powerMin;
         m_anim = GetComponent<Animator>();
-	}
+        m_gameManager = FindObjectOfType<GameManager>();
+    }
+
     private void Start()
     {
+        if (m_throwPower <= 0)
+            m_throwPower = 600f;
+        m_timer = m_sinkCD;
         SpawnSink();
         m_currentHealth = maxHealth;
         healthText.text = "Health: " + m_currentHealth;
@@ -49,7 +50,7 @@ public class PlayerController : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-        if (sinkInHands == null)
+        if (SinkInHands == null)
         {
             m_timer -= Time.deltaTime;
             if (m_timer < 0)
@@ -58,31 +59,28 @@ public class PlayerController : MonoBehaviour {
                 m_timer = m_sinkCD;
             }
         }
-        if (!isFacingUI && sinkInHands != null && canThrow)
+        if (!isFacingUI && SinkInHands != null && isAbleToThrow)
         {
             
 #if UNITY_EDITOR
             if (Input.GetMouseButtonUp(0))
             {
                 ThrowSink();
-                m_throwPower = m_powerMin;
             }
-
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                ChangeSink();
+                m_anim.SetTrigger("prepSink");
+            }
 #elif UNITY_ANDROID
             if((Input.touchCount > 0))
             {
                 Touch touch = Input.GetTouch(0);
                 if(touch.phase == TouchPhase.Ended)
                 {
-                    /*if (m_sinkStored)
-                    {
-                        m_sinkStored = false;
-                        m_touchTime = 0;
-                    }*/
-                   // else
-                        ThrowSink();
+                    ThrowSink();
                 }
-                if(touch.phase == TouchPhase.Stationary)
+                else if(touch.phase == TouchPhase.Stationary)
                 {
                     m_touchTime += Time.deltaTime;
                     if (m_touchTime >= 1.0f /*&& !m_sinkStored*/)
@@ -99,47 +97,48 @@ public class PlayerController : MonoBehaviour {
             }
 #endif
         }
-#if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.Space))
-            ChangeSink();
-#endif
     }
     private void SpawnSink()
     {
-        sinkInHands = Instantiate(m_sinks[Random.Range(0, 3)], sinkSpawn);  //Spawn a random sink
-		//sinkInHands = Instantiate(_sinks[4], sinkSpawn);  //tests the new Fragmentation Sink
-        sinkInHands.transform.position = sinkSpawn.position;    //Place the sink in the player's hands
-        if(!(m_sinkScript = sinkInHands.GetComponent<SinkController>())) //Check if sink has a sinkscript component, if not add a simple sink script and continue
+        m_sinkInHands = Instantiate(m_sinks[Random.Range(0, 3)], m_sinkSpawnPosition);  //Spawn a random sink
+        m_sinkInHands.transform.position = m_sinkSpawnPosition.position;    //Place the sink in the player's hands
+
+        if(!(m_currentSinkController = m_sinkInHands.GetComponent<SinkController>())) //Check if sink has a sinkscript component, if not add a simple sink script and continue
         {
-            Debug.LogError("SinkScript not found on " + sinkInHands.name + "\nAdding a simple sink script to fix issue");
-            m_sinkScript = sinkInHands.AddComponent<SimpleSink>();
+            Debug.LogError("SinkScript not found on " + SinkInHands.name + "\nAdding a simple sink script to fix issue");
+            m_currentSinkController = m_sinkInHands.AddComponent<SimpleSink>();
         }
-        m_sinkScript.SinkConstructor(gm, sinkSpawn, m_throwPower);  //Call the sink constructor to setup required variables
+
+        m_currentSinkController.SinkConstructor(m_gameManager, m_sinkSpawnPosition, m_throwPower);  //Call the sink constructor to setup required variables
                                                                     //Sinks require a reference to the GameManager so the sink can be tracked, rather than using GameObject.Find I pass in a reference
         m_anim.SetTrigger("prepSink");
     }
 
     private void ThrowSink()
     {
-        m_sinkScript.Throw(m_throwPower);
-        sinkInHands = null;
-        m_sinkScript = null;
+        if (!m_currentSinkController)
+            return;
+
+        m_currentSinkController.Throw(m_throwPower);
+        m_sinkInHands = null;
+        m_currentSinkController = null;
     }
 
     private void ChangeSink()
     {
-        if (currentBunker.m_storedSink)  //If a sink is already stored here then swap with the sink currently in the players hands
+        if (CurrentBunker.m_storedSink)  //If a sink is already stored here then swap with the sink currently in the players hands
         {
-            sinkInHands = currentBunker.SwapSink(sinkInHands);
-            m_sinkScript = sinkInHands.GetComponent<SinkController>();
-            sinkInHands.GetComponent<LineRenderer>().enabled = true;
-            sinkInHands.transform.parent = sinkSpawn;
-            sinkInHands.transform.position = sinkSpawn.position;
-            sinkInHands.transform.rotation = sinkSpawn.rotation;
+            SinkInHands = CurrentBunker.SwapSink(SinkInHands);
+            m_currentSinkController = SinkInHands.GetComponent<SinkController>();
+            SinkInHands.GetComponent<LineRenderer>().enabled = true;
+            SinkInHands.transform.parent = m_sinkSpawnPosition;
+            SinkInHands.transform.position = m_sinkSpawnPosition.position;
+            SinkInHands.transform.rotation = m_sinkSpawnPosition.rotation;
         }
-        else   //If no sink is stored in this bunker then store the sink currently in the player's hands and spawn a new sink
+        else   //If no sink is stored then store the sink currently in the player's hands and spawn a new sink
+        //TODO: Possibly remove Bunker script and have the stored sink attached to the player as bunkers are no longer necessary
         {
-            currentBunker.StoreSink(sinkInHands);
+            CurrentBunker.StoreSink(SinkInHands);   //null check for SinkInHands is done by the Bunker script
             SpawnSink();
         }
     }
@@ -149,7 +148,7 @@ public class PlayerController : MonoBehaviour {
         m_currentHealth -= damage;
         if(m_currentHealth <= 0)
         {
-            gm.ResetGame(); 
+            m_gameManager.ResetGame(); 
         }
         healthText.text = "Health: " + m_currentHealth;
     }
@@ -159,24 +158,29 @@ public class PlayerController : MonoBehaviour {
         m_currentHealth = maxHealth;
     }
 
-#region Getters and Setters
-    public GameObject sinkInHands
+#region Public Properties
+    public GameObject SinkInHands
     {
         get { return m_sinkInHands; }
         set { m_sinkInHands = value; }
     }
 
-    public float sinkCD
+    public float SinkCD
     {
         get { return m_sinkCD; }
         set { m_sinkCD = value;
             m_timer = m_sinkCD; }
     }
 
-    public BunkerScript currentBunker
+    public BunkerScript CurrentBunker
     {
         get { return m_currentBunker; }
         set { m_currentBunker = value; }
     }
-#endregion
+
+    public Transform SinkThrowPosition
+    {
+        get { return m_sinkThrowPosition; }
+    }
+    #endregion
 }

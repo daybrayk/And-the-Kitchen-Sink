@@ -8,6 +8,7 @@ public class BunkerScript : MonoBehaviour {
     public Transform playerTransform;
     public Transform menuPosition;
     public PlayerController pc;
+
     [HideInInspector] public GameObject m_storedSink;
     private int m_index;
     [SerializeField] private Transform m_sinkStorage;
@@ -16,7 +17,7 @@ public class BunkerScript : MonoBehaviour {
     {
         // m_bunkers[0].ChangeBunker();
         if (gameObject.name == "HouseBunker")
-            pc.currentBunker = this;
+            pc.CurrentBunker = this;
     }
 
     public void ChangeBunker()
@@ -26,11 +27,13 @@ public class BunkerScript : MonoBehaviour {
         
         playerTransform.position = playerPosition.position;
         playerTransform.rotation = Quaternion.LookRotation(playerPosition.forward, Vector3.up);
-        pc.currentBunker = this;
+        pc.CurrentBunker = this;
     }
 
     public void StoreSink(GameObject sink)
     {
+        if (!sink)
+            return;
         m_storedSink = sink;
         m_storedSink.transform.parent = null;
         m_storedSink.transform.position = m_sinkStorage.position;

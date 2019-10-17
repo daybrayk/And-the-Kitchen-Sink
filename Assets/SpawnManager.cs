@@ -21,17 +21,17 @@ public class SpawnManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if(gm.score % 100 == 0 && !m_activateOnce)
+        if(gm.Score % 100 == 0 && !m_activateOnce)
         {
             numberOfEnemiesSpawned = Mathf.Clamp(numberOfEnemiesSpawned++, 0, 5);
         }
-        else if (gm.score % 100 != 0)
+        else if (gm.Score % 100 != 0)
         {
             m_activateOnce = true;
         }
 
         
-        if(m_spawnCD <= 0 && gm.startGame)
+        if(m_spawnCD <= 0 && gm.isGameRunning)
         {
             if(enemyCount < numberOfEnemiesSpawned)
             {

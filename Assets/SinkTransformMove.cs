@@ -12,9 +12,9 @@ public class SinkTransformMove : StateMachineBehaviour {
     {
         t = 0;
         m_pc = animator.gameObject.GetComponent<PlayerController>();
-        m_throwPosition = m_pc.sinkThrow.position;
-        m_sinkRigidbody = m_pc.sinkInHands.GetComponent<Rigidbody>();
-        m_pc.canThrow = false;
+        m_throwPosition = m_pc.SinkThrowPosition.position;
+        m_sinkRigidbody = m_pc.SinkInHands.GetComponent<Rigidbody>();
+        m_pc.isAbleToThrow = false;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -28,7 +28,7 @@ public class SinkTransformMove : StateMachineBehaviour {
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        m_pc.canThrow = true;
+        m_pc.isAbleToThrow = true;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove(). Code that processes and affects root motion should be implemented here

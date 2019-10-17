@@ -11,7 +11,7 @@ public class MessageWindowController : MonoBehaviour {
 	void Start () {
         messageWindow = GetComponent<Canvas>();
         if (PlayerPrefs.HasKey("ShowStartTxt"))
-            dontShowStartTxt.isOn = PlayerPrefs.GetInt("ShowStartTxt") == 0 ? false : true;
+            dontShowStartTxt.isOn = PlayerPrefs.GetInt("ShowStartTxt") != 0;
         else
             dontShowStartTxt.isOn = false;
         if(!dontShowStartTxt.isOn)
@@ -19,11 +19,8 @@ public class MessageWindowController : MonoBehaviour {
             messageWindow.enabled = true;
             gameStartTxt.SetActive(true);
         }
-	}
-	
-	// Update is called once per frame
-	void Update () {
 
+        GameManager.gameOver += OnGameOver;
 	}
 
     public void Close()
@@ -33,7 +30,7 @@ public class MessageWindowController : MonoBehaviour {
         messageWindow.enabled = false;
     }
 
-    public void OpenOnGameOver()
+    public void Open()
     {
         messageWindow.enabled = true;
         gameOverTxt.SetActive(true);
@@ -56,5 +53,15 @@ public class MessageWindowController : MonoBehaviour {
         }
         else
             PlayerPrefs.SetInt("ShowStartTxt", 1);
+    }
+
+    private void OnGameOver()
+    {
+        Open();
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.gameOver -= OnGameOver;
     }
 }

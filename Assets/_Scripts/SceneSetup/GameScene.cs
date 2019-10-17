@@ -24,6 +24,8 @@ public class GameScene : MonoBehaviour {
         highscore.onClick.AddListener(delegate { ShowHighscore(); });
         pauseHighscore.onClick.AddListener(delegate { ShowHighscore(); });
         exitHighscore.onClick.AddListener(delegate { HideHighScore(); });
+
+        GameManager.gameOver += OnGameOver;
 	}
 
     public void MainMenu()
@@ -50,5 +52,15 @@ public class GameScene : MonoBehaviour {
     public void HideHighScore()
     {
         highscorePanel.SetActive(false);
+    }
+
+    private void OnGameOver()
+    {
+        MainMenu();
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.gameOver -= OnGameOver;
     }
 }
