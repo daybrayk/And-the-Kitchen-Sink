@@ -2292,6 +2292,21 @@ PrefabInstance:
       propertyPath: maxHealth
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 114639534340242022, guid: 125acaa5afd0235488239fa4b22a8684,
+        type: 3}
+      propertyPath: m_healthText
+      value: 
+      objectReference: {fileID: 582863763}
+    - target: {fileID: 114639534340242022, guid: 125acaa5afd0235488239fa4b22a8684,
+        type: 3}
+      propertyPath: m_sinkThrowCD
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114216578413601956, guid: 125acaa5afd0235488239fa4b22a8684,
+        type: 3}
+      propertyPath: m_uiMask.m_Bits
+      value: 32800
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 125acaa5afd0235488239fa4b22a8684, type: 3}
 --- !u!4 &315601624 stripped
@@ -4554,7 +4569,7 @@ GameObject:
   - component: {fileID: 582863764}
   - component: {fileID: 582863763}
   m_Layer: 5
-  m_Name: Text
+  m_Name: HealthText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

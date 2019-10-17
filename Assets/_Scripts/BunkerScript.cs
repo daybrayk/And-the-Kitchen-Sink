@@ -4,30 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 public class BunkerScript : MonoBehaviour {
     public RectTransform menuCanvas;
-    public Transform playerPosition;
-    public Transform playerTransform;
-    public Transform menuPosition;
     public PlayerController pc;
 
     [HideInInspector] public GameObject m_storedSink;
     private int m_index;
     [SerializeField] private Transform m_sinkStorage;
-    [SerializeField] private BunkerScript[] m_bunkers;
     private void Start()
     {
-        // m_bunkers[0].ChangeBunker();
-        if (gameObject.name == "HouseBunker")
-            pc.CurrentBunker = this;
-    }
 
-    public void ChangeBunker()
-    {
-        menuCanvas.transform.position = menuPosition.position;
-        menuCanvas.rotation = Quaternion.Euler(menuPosition.eulerAngles);
-        
-        playerTransform.position = playerPosition.position;
-        playerTransform.rotation = Quaternion.LookRotation(playerPosition.forward, Vector3.up);
-        pc.CurrentBunker = this;
     }
 
     public void StoreSink(GameObject sink)

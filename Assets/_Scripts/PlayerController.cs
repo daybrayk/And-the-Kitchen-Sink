@@ -4,31 +4,40 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 public class PlayerController : MonoBehaviour {
-    #region Public Variables
-    public Text healthText;
+    #region UI References
+    [Header("UI")]
+    [SerializeField] private Text m_healthText;
     #endregion
 
-    #region Throw Booleans
-    [HideInInspector] public bool isAbleToThrow;
-    [HideInInspector] public bool isFacingUI;
-    private float m_currentHealth;
+    #region Player Stuff
+    [Header("Player Stuff")]
     [SerializeField] private int maxHealth;
     [SerializeField] private float m_throwPower;
-    [SerializeField] private float m_sinkCD;
+    [SerializeField] private BunkerScript m_currentBunker;
+    [HideInInspector] public bool isAbleToThrow;
+    [HideInInspector] public bool isFacingUI;
+    private Animator m_anim;
+    private float m_currentHealth;
     #endregion
 
-    #region Private Variables
+    #region Object References
+    private GameManager m_gameManager;
+    #endregion
+
+    #region Sink Variables
+    [Header("Sink Stuff")]
+    [SerializeField] private float m_sinkThrowCD;
     [SerializeField] private Transform m_sinkSpawnPosition;
     [SerializeField] private Transform m_sinkThrowPosition;
     [SerializeField] private List<GameObject> m_sinks = new List<GameObject>();//List of active sinks in the scene so they can be tracked and destroyed
-    private GameManager m_gameManager;
-    [SerializeField] private BunkerScript m_currentBunker;
-
-    float m_timer;
-    float m_touchTime;
+    private float m_sinkThrowTimer;
     private GameObject m_sinkInHands;
     private SinkController m_currentSinkController;
-    private Animator m_anim;
+    #endregion
+
+    #region Touch Variables
+    private float m_touchTime;
+    private Touch[] m_touches;
     #endregion
 
     // Use this for initialization
@@ -41,10 +50,15 @@ public class PlayerController : MonoBehaviour {
     {
         if (m_throwPower <= 0)
             m_throwPower = 600f;
-        m_timer = m_sinkCD;
-        SpawnSink();
+
+        if (m_sinkThrowTimer <= 0)
+            m_sinkThrowTimer = 1;
+        m_sinkThrowTimer = m_sinkThrowCD;
+
         m_currentHealth = maxHealth;
-        healthText.text = "Health: " + m_currentHealth;
+        m_healthText.text = "Health: " + m_currentHealth;
+
+        SpawnSink();
     }
 
     // Update is called once per frame
@@ -52,13 +66,15 @@ public class PlayerController : MonoBehaviour {
     {
         if (SinkInHands == null)
         {
-            m_timer -= Time.deltaTime;
-            if (m_timer < 0)
+            m_sinkThrowTimer -= Time.deltaTime;
+            if (m_sinkThrowTimer < 0)
             {
                 SpawnSink();
-                m_timer = m_sinkCD;
+                m_sinkThrowTimer = m_sinkThrowCD;
             }
         }
+
+        //Don't want to try and throw if the player is facing the UI menu or if there is no sink ready, and able, to be thrown
         if (!isFacingUI && SinkInHands != null && isAbleToThrow)
         {
             
@@ -72,10 +88,12 @@ public class PlayerController : MonoBehaviour {
                 ChangeSink();
                 m_anim.SetTrigger("prepSink");
             }
+
 #elif UNITY_ANDROID
             if((Input.touchCount > 0))
             {
-                Touch touch = Input.GetTouch(0);
+                m_touches = Input.touches;
+                Touch touch = m_touches[0];
                 if(touch.phase == TouchPhase.Ended)
                 {
                     ThrowSink();
@@ -100,10 +118,10 @@ public class PlayerController : MonoBehaviour {
     }
     private void SpawnSink()
     {
-        m_sinkInHands = Instantiate(m_sinks[Random.Range(0, 3)], m_sinkSpawnPosition);  //Spawn a random sink
+        m_sinkInHands = Instantiate(m_sinks[Random.Range(0, 3)], m_sinkSpawnPosition);  //Randomize sink spawn
         m_sinkInHands.transform.position = m_sinkSpawnPosition.position;    //Place the sink in the player's hands
 
-        if(!(m_currentSinkController = m_sinkInHands.GetComponent<SinkController>())) //Check if sink has a sinkscript component, if not add a simple sink script and continue
+        if(!(m_currentSinkController = m_sinkInHands.GetComponent<SinkController>())) //If no sink script component is found, add one
         {
             Debug.LogError("SinkScript not found on " + SinkInHands.name + "\nAdding a simple sink script to fix issue");
             m_currentSinkController = m_sinkInHands.AddComponent<SimpleSink>();
@@ -126,9 +144,9 @@ public class PlayerController : MonoBehaviour {
 
     private void ChangeSink()
     {
-        if (CurrentBunker.m_storedSink)  //If a sink is already stored here then swap with the sink currently in the players hands
+        if (m_currentBunker.m_storedSink)  //If a sink is already stored here then swap with the sink currently in the players hands
         {
-            SinkInHands = CurrentBunker.SwapSink(SinkInHands);
+            SinkInHands = m_currentBunker.SwapSink(SinkInHands);
             m_currentSinkController = SinkInHands.GetComponent<SinkController>();
             SinkInHands.GetComponent<LineRenderer>().enabled = true;
             SinkInHands.transform.parent = m_sinkSpawnPosition;
@@ -138,7 +156,7 @@ public class PlayerController : MonoBehaviour {
         else   //If no sink is stored then store the sink currently in the player's hands and spawn a new sink
         //TODO: Possibly remove Bunker script and have the stored sink attached to the player as bunkers are no longer necessary
         {
-            CurrentBunker.StoreSink(SinkInHands);   //null check for SinkInHands is done by the Bunker script
+            m_currentBunker.StoreSink(SinkInHands);   //null check for SinkInHands is done by the Bunker script
             SpawnSink();
         }
     }
@@ -150,7 +168,7 @@ public class PlayerController : MonoBehaviour {
         {
             m_gameManager.ResetGame(); 
         }
-        healthText.text = "Health: " + m_currentHealth;
+        m_healthText.text = "Health: " + m_currentHealth;
     }
 
     public void ResetHealth()
@@ -167,15 +185,9 @@ public class PlayerController : MonoBehaviour {
 
     public float SinkCD
     {
-        get { return m_sinkCD; }
-        set { m_sinkCD = value;
-            m_timer = m_sinkCD; }
-    }
-
-    public BunkerScript CurrentBunker
-    {
-        get { return m_currentBunker; }
-        set { m_currentBunker = value; }
+        get { return m_sinkThrowCD; }
+        set { m_sinkThrowCD = value;
+            m_sinkThrowTimer = m_sinkThrowCD; }
     }
 
     public Transform SinkThrowPosition
