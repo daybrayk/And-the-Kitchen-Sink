@@ -7,12 +7,12 @@ public class ShotTrajectory : MonoBehaviour
     [SerializeField]private LayerMask m_trajectoryMask;
 
     private LineRenderer m_trajectoryRenderer;
-    private SinkController m_sinkcontroller;
+    private SinkController m_sinkController;
 
     private void Start()
     {
-        if(!m_sinkcontroller)
-            m_sinkcontroller = GetComponent<SinkController>();
+        if(!m_sinkController)
+            m_sinkController = GetComponent<SinkController>();
         if (!m_trajectoryRenderer)
             m_trajectoryRenderer = GetComponent<LineRenderer>();
         SinkTrajectory();
@@ -43,9 +43,9 @@ public class ShotTrajectory : MonoBehaviour
         {
             currentPos = nextPos;
 
-            float x = origin.x + m_sinkcontroller.m_v.x * t;
-            float y = origin.y + (m_sinkcontroller.m_v.y*t + ((Physics.gravity.y * t) / 2) * t);
-            float z = origin.z + m_sinkcontroller.m_v.z * t;
+            float x = origin.x + m_sinkController.ThrowVelocity.x * t;
+            float y = origin.y + (m_sinkController.ThrowVelocity.y*t + ((Physics.gravity.y * t) / 2) * t);
+            float z = origin.z + m_sinkController.ThrowVelocity.z * t;
             nextPos = new Vector3(x, y, z);
 
             m_trajectoryRenderer.positionCount++;

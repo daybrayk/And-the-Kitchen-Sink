@@ -1,98 +1,113 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+[RequireComponent(typeof(LineRenderer))]
+[RequireComponent(typeof(Rigidbody))]
+public abstract class SinkController : MonoBehaviour
+{
+    protected const int COLLIDER_CACHE_SIZE = 32;
+    private Collider[] m_colliderCache;
 
-public abstract class SinkController : MonoBehaviour {
-    [HideInInspector] public Transform sinkSpawn;
-    [HideInInspector] public float force;
-    [HideInInspector] public float mass;
-    public float lifeSpan;
-    public LineRenderer lr;
-    public LayerMask enemyMask;
-    public LayerMask terrainMask;
-    [HideInInspector]public Vector3 m_v;
-    private Camera main;
-    protected Rigidbody m_rb;
-    protected Collider[] colliderCache;
-    protected int colliderCacheSize = 32;
-    private Vector3 m_trajectory;
-    protected GameManager gm;
+    [SerializeField]protected float lifeSpan;
+
+    #region Layer Masks
+    [SerializeField]protected LayerMask enemyMask;
+    protected LayerMask terrainMask;
+    #endregion
+
+    #region Trajectory Calculation Variables
+    protected float force;
+    protected float mass;
+    protected Vector3 m_trajectory;//Current direction of the throw
+    public Vector3 ThrowVelocity
+    {
+        get { return m_trajectory * force/mass; }
+    }
+    #endregion
+
+    #region Component References
+    protected Rigidbody m_rigidBody;
+    protected LineRenderer m_lineRenderer;
+    #endregion
+
+    #region Object References
+    protected Transform m_sinkSpawn;
+    protected Camera main;
+    protected GameManager m_gameManager;
+    #endregion
 
     private void Awake()
     {
         terrainMask = (~1 << 10 | ~1 << 12 | ~1 << 13);
         main = Camera.main;
-        m_rb = GetComponent<Rigidbody>();
-        //m_rb.isKinematic = true;
-        if(!lr)
-            lr = GetComponent<LineRenderer>();
-        mass = m_rb.mass;
-        m_trajectory = new Vector3(transform.forward.x, 0.60f, transform.forward.z).normalized;
+        m_rigidBody = GetComponent<Rigidbody>();
+        m_lineRenderer = GetComponent<LineRenderer>();
+        mass = m_rigidBody.mass;
+        m_colliderCache = new Collider[COLLIDER_CACHE_SIZE];
     }
 
     protected void Update()
     {
-        if(lr)
+        if(m_lineRenderer)
         {
             Ray ray = new Ray(main.transform.position, main.transform.forward);
             RaycastHit hit;
-            m_trajectory = Physics.Raycast(ray, out hit, terrainMask) ? Vector3.Normalize(hit.point - sinkSpawn.position) :
-                                     Vector3.Normalize(ray.GetPoint(500.0f) - sinkSpawn.position);
-            m_v = m_trajectory * force / mass;
+            m_trajectory = Physics.Raycast(ray, out hit, terrainMask) ? Vector3.Normalize(hit.point - m_sinkSpawn.position) :
+                                     Vector3.Normalize(ray.GetPoint(500.0f) - m_sinkSpawn.position);
         }
     }
 
     protected void FixedUpdate()
     {
-        Physics.OverlapBoxNonAlloc(transform.position, (Vector3.one * 0.76f) / 2, ColliderCache, transform.rotation, enemyMask);
-        foreach(Collider c in colliderCache)
+        Physics.OverlapBoxNonAlloc(transform.position, (Vector3.one * 0.76f * transform.localScale.x) / 2, m_colliderCache, transform.rotation, enemyMask);
+        foreach(Collider c in m_colliderCache)
         {
             if(c)
             {
                 RagdollScript rs;
                 if ((rs = c.GetComponentInParent<RagdollScript>()))
-                    CollisionEffect(rs);  //rs.ActivateRagdoll(gm);
+                    CollisionEffect(rs);
             }
         }
     }
 
     public void SinkConstructor(GameManager gm, Transform sinkSpawn, float throwPower)
     {
-        this.gm = gm;
+        m_gameManager = gm;
         gm.AddSink(gameObject); //Add sink to the GameManager sink tracker
-        this.sinkSpawn = sinkSpawn;
+        m_sinkSpawn = sinkSpawn;
         force = throwPower;
     }
 
     protected void OnDrawGizmos()
     {
-        //Gizmos.DrawWireSphere(transform.position, 0.5f);
         Gizmos.DrawWireCube(transform.position + (Vector3.up * 0.25f), new Vector3(0.9f, 0.4f, 0.8f));
     }
     public void Throw(float force)
     {
-        m_rb.isKinematic = false;
+        if (!m_lineRenderer)
+            m_lineRenderer = GetComponent<LineRenderer>();//Line Renderer is a required component so no need to check if it is there
+
+        if (!m_rigidBody)
+            m_rigidBody = GetComponent<Rigidbody>();//Rigidbody is a required component so no need to check if it is there
+
         transform.parent = null;
-        if(lr)
-            lr.enabled = false;
-        m_rb.AddForce(force * m_trajectory, ForceMode.Impulse);
-        m_rb.AddTorque(new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5)), ForceMode.Impulse);  //Adds a random rotation to the sink before it is thrown to simulate a realistic throw
+
+        m_lineRenderer.enabled = false;
+
+        m_rigidBody.isKinematic = false;
+        m_rigidBody.AddForce(force * m_trajectory, ForceMode.Impulse);
+        m_rigidBody.AddTorque(new Vector3(UnityEngine.Random.Range(-5, 5), UnityEngine.Random.Range(-5, 5), UnityEngine.Random.Range(-5, 5)), ForceMode.Impulse);  //Adds a random rotation to the sink before it is thrown to simulate a realistic throw
+
         Destroy(gameObject, lifeSpan);
     }
 
     private void OnDestroy()
     {
-        gm.RemoveSink(gameObject);
-    }
-
-    public Collider[] ColliderCache
-    {
-        get
-        {
-            if (colliderCache == null)
-                colliderCache = new Collider[colliderCacheSize];
-            return colliderCache;
-        }
+        if (!m_gameManager)
+            return;
+        m_gameManager.RemoveSink(gameObject);
     }
 
     public abstract void CollisionEffect(/*Collider c, */RagdollScript rs);
@@ -100,11 +115,11 @@ public abstract class SinkController : MonoBehaviour {
 
     public void SetGM(GameManager gm)
     {
-        this.gm = gm;
+        m_gameManager = gm;
     }
 
     public GameManager GetGM()
     {
-        return gm;
+        return m_gameManager;
     }
 }

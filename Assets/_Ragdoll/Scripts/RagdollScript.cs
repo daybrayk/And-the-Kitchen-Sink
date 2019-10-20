@@ -7,8 +7,6 @@ public class RagdollScript : MonoBehaviour {
     public GameObject ragdoll;
     public Rigidbody ragdollTorso;
     private Limb[] myLimbs;
-    [SerializeField]
-    private GameManager gm;
 	// Use this for initialization
 	void Start () {
         myLimbs = GetComponentsInChildren<Limb>();
@@ -16,8 +14,11 @@ public class RagdollScript : MonoBehaviour {
 
     public void ActivateRagdoll(GameManager gm)
     {
-        gm.RemoveEnemy(gameObject);
-        gm.AddEnemy(ragdoll);
+        if(gm)
+        {
+            gm.RemoveEnemy(gameObject);
+            gm.AddEnemy(ragdoll);
+        }
         foreach (Limb limb in myLimbs)
         {
             limb.SetRagdollPos();

@@ -19,7 +19,7 @@ public class ExplosiveSink : SinkController {
 
             if (c)
             {
-                c.GetComponentInParent<RagdollScript>().ActivateRagdoll(gm);
+                c.GetComponentInParent<RagdollScript>().ActivateRagdoll(m_gameManager);
             }
         }
 
@@ -36,7 +36,7 @@ public class ExplosiveSink : SinkController {
 
     public override void CollisionEffect(RagdollScript rs)
     {
-        rs.ActivateRagdoll(gm);
+        rs.ActivateRagdoll(m_gameManager);
     }
 
     private void OnCollisionEnter(Collision collision)

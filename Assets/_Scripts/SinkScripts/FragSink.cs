@@ -15,7 +15,7 @@ public class FragSink : SinkController {
 
     public override void CollisionEffect(RagdollScript rs)
     {
-        rs.ActivateRagdoll(gm);
+        rs.ActivateRagdoll(m_gameManager);
     }
 
     private void OnCollisionEnter(Collision collision)
