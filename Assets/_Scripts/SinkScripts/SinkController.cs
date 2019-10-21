@@ -34,7 +34,7 @@ public abstract class SinkController : MonoBehaviour
     #region Object References
     protected Transform m_sinkSpawn;
     protected Camera main;
-    protected GameManager m_gameManager;
+    //protected GameManager m_gameManager;
     #endregion
 
     private void Awake()
@@ -72,10 +72,10 @@ public abstract class SinkController : MonoBehaviour
         }
     }
 
-    public void SinkConstructor(GameManager gm, Transform sinkSpawn, float throwPower)
+    public void SinkConstructor(Transform sinkSpawn, float throwPower)
     {
-        m_gameManager = gm;
-        gm.AddSink(gameObject); //Add sink to the GameManager sink tracker
+        if(GameManager.Instance)
+            GameManager.Instance.AddSink(gameObject); //Add sink to the GameManager sink tracker
         m_sinkSpawn = sinkSpawn;
         force = throwPower;
     }
@@ -84,6 +84,7 @@ public abstract class SinkController : MonoBehaviour
     {
         Gizmos.DrawWireCube(transform.position + (Vector3.up * 0.25f), new Vector3(0.9f, 0.4f, 0.8f));
     }
+
     public void Throw(float force)
     {
         if (!m_lineRenderer)
@@ -105,15 +106,16 @@ public abstract class SinkController : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (!m_gameManager)
-            return;
-        m_gameManager.RemoveSink(gameObject);
+        if (GameManager.Instance)
+            GameManager.Instance.RemoveSink(gameObject);
+        else
+            Debug.LogError("Missing reference to GameManager Instance");
     }
 
     public abstract void CollisionEffect(/*Collider c, */RagdollScript rs);
     public abstract void ActiveEffect();
 
-    public void SetGM(GameManager gm)
+    /*public void SetGM(GameManager gm)
     {
         m_gameManager = gm;
     }
@@ -121,5 +123,5 @@ public abstract class SinkController : MonoBehaviour
     public GameManager GetGM()
     {
         return m_gameManager;
-    }
+    }*/
 }

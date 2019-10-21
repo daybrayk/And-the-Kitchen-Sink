@@ -5,9 +5,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class GameManager : MonoBehaviour {
     #region Game State Variables
-    [HideInInspector] public bool isGameRunning;
+    public bool IsGameRunning{ get;  private set; }
     private float m_highscore;
-    
     private float m_score;
     public float Score
     {
@@ -54,8 +53,20 @@ public class GameManager : MonoBehaviour {
     public static GameOver gameOver;
     #endregion
 
+    #region Singleton Reference
+    public static GameManager Instance { get; private set; }
+    #endregion
+
     private void Awake()
     {
+        if(Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
 
         enemyCollector = new List<GameObject>();
         sinkCollector = new List<GameObject>();
@@ -80,7 +91,9 @@ public class GameManager : MonoBehaviour {
     public void RemoveSink(GameObject o)
     {
         if (sinkCollector.Contains(o))
+        {
             sinkCollector.Remove(o);
+        }
     }
 
     public void AddEnemy(GameObject o)
@@ -100,12 +113,12 @@ public class GameManager : MonoBehaviour {
 
     public void StartGame()
     {
-        isGameRunning = true;
+        IsGameRunning = true;
     }
 
     public void StopGame()
     {
-        isGameRunning = false;
+        IsGameRunning = false;
     }
 
     public void ResetGame()
@@ -134,8 +147,6 @@ public class GameManager : MonoBehaviour {
     {
         if (gameOver != null)
             gameOver();
-        /*messageController.Open();
-        gs.MainMenu();*/
 
     }
 

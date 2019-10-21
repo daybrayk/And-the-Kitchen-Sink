@@ -31,7 +31,7 @@ public class SpawnManager : MonoBehaviour {
         }
 
         
-        if(m_spawnCD <= 0 && gm.isGameRunning)
+        if(m_spawnCD <= 0 && gm.IsGameRunning)
         {
             if(enemyCount < numberOfEnemiesSpawned)
             {

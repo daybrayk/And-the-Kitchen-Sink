@@ -10,7 +10,7 @@ public class SimpleSink : SinkController {
     {
         //Vector3 collisionForce = GetComponent<Rigidbody>().velocity;
         //rs.ActivateRagdoll(collisionForce * mass, c.GetComponent<Limb>());
-        rs.ActivateRagdoll(m_gameManager);
+        rs.ActivateRagdoll();
         
     }
 

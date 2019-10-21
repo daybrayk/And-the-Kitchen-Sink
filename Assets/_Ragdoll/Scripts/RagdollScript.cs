@@ -12,12 +12,12 @@ public class RagdollScript : MonoBehaviour {
         myLimbs = GetComponentsInChildren<Limb>();
 	}
 
-    public void ActivateRagdoll(GameManager gm)
+    public void ActivateRagdoll()
     {
-        if(gm)
+        if(GameManager.Instance)
         {
-            gm.RemoveEnemy(gameObject);
-            gm.AddEnemy(ragdoll);
+            GameManager.Instance.RemoveEnemy(gameObject);
+            GameManager.Instance.AddEnemy(ragdoll);
         }
         foreach (Limb limb in myLimbs)
         {

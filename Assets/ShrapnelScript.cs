@@ -19,7 +19,6 @@ public class ShrapnelScript : MonoBehaviour {
     {
         foreach(Rigidbody rb in shrapnel)
         {
-            rb.GetComponent<SinkController>().SetGM(sinkReference.GetGM());
             rb.transform.parent = null;
             rb.isKinematic = false;
             Debug.Log(rb.isKinematic);

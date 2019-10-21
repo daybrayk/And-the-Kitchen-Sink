@@ -127,7 +127,7 @@ public class PlayerController : MonoBehaviour {
             m_currentSinkController = m_sinkInHands.AddComponent<SimpleSink>();
         }
 
-        m_currentSinkController.SinkConstructor(m_gameManager, m_sinkSpawnPosition, m_throwPower);  //Call the sink constructor to setup required variables
+        m_currentSinkController.SinkConstructor(m_sinkSpawnPosition, m_throwPower);  //Call the sink constructor to setup required variables
                                                                     //Sinks require a reference to the GameManager so the sink can be tracked, rather than using GameObject.Find I pass in a reference
         m_anim.SetTrigger("prepSink");
     }
