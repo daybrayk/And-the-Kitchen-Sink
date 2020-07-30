@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
     #region Game State Variables
     public bool IsGameRunning{ get;  private set; }
-    private float m_highscore;
-    private float m_score;
+    public float HighScore { get; private set; }
     public float Score
     {
         get{ return m_score; }
@@ -16,15 +16,16 @@ public class GameManager : MonoBehaviour {
         {
             m_score = value;
             currentscoreText.text = "Currentscore: " + m_score;
-            if (m_score > m_highscore)
+            if (m_score > HighScore)
             {
-                m_highscore = m_score;
+                HighScore = m_score;
                 if(highscoreText)
-                    highscoreText.text = "Highscore: " + m_highscore;
-                PlayerPrefs.SetFloat("highscore", m_highscore);
+                    highscoreText.text = "Highscore: " + HighScore;
+                PlayerPrefs.SetFloat("highscore", HighScore);
             }
         }
     }
+    private float m_score;
     #endregion
 
     #region UI References
@@ -42,7 +43,6 @@ public class GameManager : MonoBehaviour {
     public EnemySpawner[] eSpawner;
     #endregion
 
-
     #region Object Trackers
     [Tooltip("Used to track active enemy Game Objects")] private List<GameObject> enemyCollector; //Tracks all active enemies, if the player presses the retart button all sinks are destroyed
     [Tooltip("Used to track active sink Game Objects")] private List<GameObject> sinkCollector;  //Tracks all active sinks, if the player presses the restart button all sinks are destroyed
@@ -59,7 +59,8 @@ public class GameManager : MonoBehaviour {
 
     private void Awake()
     {
-        if(Instance != null && Instance != this)
+        #region Singleton Setup
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
         }
@@ -67,15 +68,16 @@ public class GameManager : MonoBehaviour {
         {
             Instance = this;
         }
+        #endregion
 
         enemyCollector = new List<GameObject>();
         sinkCollector = new List<GameObject>();
-        m_highscore = PlayerPrefs.GetFloat("highscore");
+        HighScore = PlayerPrefs.GetFloat("highscore");
     }
 
     private void Start()
     {
-        highscoreText.text = "Highscore: " + m_highscore;
+        highscoreText.text = "Highscore: " + HighScore;
         currentscoreText.text = "Currentscore: " + m_score;
     }
 
@@ -153,14 +155,9 @@ public class GameManager : MonoBehaviour {
     public void QuitGame()
     {
         Debug.Log("Closing Game");
-        if(Score > m_highscore)
+        if(Score > HighScore)
             PlayerPrefs.SetFloat("highscore", Score);
         //add persistent data code
         Application.Quit();
-    }
-
-    public float GetHighscore()
-    {
-        return m_highscore;
     }
 }

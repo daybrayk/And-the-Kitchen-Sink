@@ -108,20 +108,8 @@ public abstract class SinkController : MonoBehaviour
     {
         if (GameManager.Instance)
             GameManager.Instance.RemoveSink(gameObject);
-        else
-            Debug.LogError("Missing reference to GameManager Instance");
     }
 
     public abstract void CollisionEffect(/*Collider c, */RagdollScript rs);
     public abstract void ActiveEffect();
-
-    /*public void SetGM(GameManager gm)
-    {
-        m_gameManager = gm;
-    }
-
-    public GameManager GetGM()
-    {
-        return m_gameManager;
-    }*/
 }

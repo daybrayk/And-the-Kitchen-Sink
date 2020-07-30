@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4008370819440850}
-  - component: {fileID: 65340373632973256}
   - component: {fileID: 54045390388012954}
   - component: {fileID: 114646053723894146}
   - component: {fileID: 114456745979879736}
@@ -36,19 +35,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &65340373632973256
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1662389277474844}
-  m_Material: {fileID: 13400000, guid: 1b815e2622155e846b02f18473a4443f, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 0.8, y: 0.35, z: 0.75}
-  m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!54 &54045390388012954
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -77,18 +63,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc7f5c6810a0f8643b761a4aa39247b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sinkSpawn: {fileID: 0}
-  force: 0
-  mass: 0
   lifeSpan: 10
-  lr: {fileID: 120102141006935248}
   enemyMask:
     serializedVersion: 2
     m_Bits: 17408
-  terrainMask:
-    serializedVersion: 2
-    m_Bits: 2048
-  m_v: {x: 0, y: 0, z: 0}
 --- !u!114 &114456745979879736
 MonoBehaviour:
   m_ObjectHideFlags: 0

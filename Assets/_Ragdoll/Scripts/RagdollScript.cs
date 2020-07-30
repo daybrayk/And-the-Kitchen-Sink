@@ -19,6 +19,7 @@ public class RagdollScript : MonoBehaviour {
             GameManager.Instance.RemoveEnemy(gameObject);
             GameManager.Instance.AddEnemy(ragdoll);
         }
+
         foreach (Limb limb in myLimbs)
         {
             limb.SetRagdollPos();

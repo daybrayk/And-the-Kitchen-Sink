@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ShotTrajectory : MonoBehaviour 
 {
-    [SerializeField]private LayerMask m_trajectoryMask;
+    [SerializeField] private LayerMask m_trajectoryMask;
 
     private LineRenderer m_trajectoryRenderer;
     private SinkController m_sinkController;
@@ -44,7 +44,7 @@ public class ShotTrajectory : MonoBehaviour
             currentPos = nextPos;
 
             float x = origin.x + m_sinkController.ThrowVelocity.x * t;
-            float y = origin.y + (m_sinkController.ThrowVelocity.y*t + ((Physics.gravity.y * t) / 2) * t);
+            float y = origin.y + (m_sinkController.ThrowVelocity.y * t + ((Physics.gravity.y * t) / 2) * t);
             float z = origin.z + m_sinkController.ThrowVelocity.z * t;
             nextPos = new Vector3(x, y, z);
 
