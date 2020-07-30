@@ -27,11 +27,12 @@ public class AIController : MonoBehaviour
         m_houseDoorTransform = GameObject.Find("HouseDoor").transform;
 
         m_currentDestination = m_houseDoorTransform;
+        
     }
 
     void Update () {
         m_aiFunctionality.MoveTo(m_currentDestination.position);
-	}
+    }
 
     private void OnDestroy()
     {
