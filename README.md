@@ -3,7 +3,7 @@ This reposity contains the code and assets for **And the Kitchen Sink**, a simpl
 There are three types of sinks that appear in the game: White - normal, Orange - Explosive, and Green - Bouncy. The enemies have a simple AI and use Unity's built in Navmesh for pathfinding. Enemies will enter a ragdoll state upond death. Enjoy!
 
 # Authors
-**Braydon Johnson** - https://www.braydonj.com/
+**Braydon Johnson**
 
 # Building Project
 This project was created using `Unity version 2018.2.19` and it is recommended that the project be opened in the same version. Versions of Unity prior to 2018.2 could cause a number of issues and are not recommended.
